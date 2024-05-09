@@ -1,0 +1,133 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Create Account</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html" rel="noopener noreferrer">Home</a></li>
+        <li class="breadcrumb-item">User Management</li>
+        <li class="breadcrumb-item active">Create Account</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+                  <!-- Profile Edit Form -->
+                  <section class="section">
+                    <div class="container-fluid">
+                      <div class="col-lg-10">
+
+                        <div class="card">
+                          <div class="card-body">
+
+
+                  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="row mb-3">
+                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                      <div class="col-md-8 col-lg-9">
+                        <img [src]="imageUrl" alt="Profile" width="100">
+                        <div class="pt-2">
+                          <input type="file" id="profileImage" (change)="onFileSelected($event)" hidden #fileInput>
+                          <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image" style="margin-right: 8px;" (click)="$event.preventDefault(); fileInput.click();">
+                            <i class="bi bi-upload"></i>
+                          </a>
+                          <a href="#" class="btn btn-danger btn-sm" title="Reset profile image" (click)="$event.preventDefault(); resetImage();">
+                            <i class="bi bi-arrow-clockwise"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Username</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="username" formControlName="username">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="firstName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="firstName" formControlName="firstname">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="lastName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="lastName" formControlName="lastname">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="email" class="form-control" id="email" formControlName="email">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="job" class="col-md-4 col-lg-3 col-form-label">Job</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="job" formControlName="job">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="department" class="col-md-4 col-lg-3 col-form-label">Department</label>
+                      <div class="col-md-8 col-lg-9">
+                        <select class="form-control" id="department" formControlName="department">
+                          <option value="Informatique">Informatique</option>
+                          <option value="Finance">Finance</option>
+                          <option value="Administratif">Administratif</option>
+                          <option value="Marketing">Marketing</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="dateEmbuche" class="col-md-4 col-lg-3 col-form-label">Hiring date</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="datetime-local" class="form-control" id="dateEmbuche" formControlName="hire_date">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="phone" class="col-md-4 col-lg-3 col-form-label">Phone Number</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="phone" formControlName="phone">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="salary" class="col-md-4 col-lg-3 col-form-label">Salary</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="salary" formControlName="salary">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="identityCard" class="col-md-4 col-lg-3 col-form-label">Identity Card</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="identityCard" formControlName="id_card">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="dateOfBirth" class="col-md-4 col-lg-3 col-form-label">Date of Birth</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="date" class="form-control" id="dateOfBirth" formControlName="date_birth">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="registrationNumber" class="col-md-4 col-lg-3 col-form-label">Address</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="adress" formControlName="address">
+                      </div>
+                    </div>
+
+
+                    <div class="text-end">
+                      <button type="button" class="btn btn-secondary " (click)="resetForm()">Reset</button>&nbsp;
+                      <button type="submit" class="btn btn-primary ">Save</button>
+                    </div>
+
+                  </form><!-- End Profile Edit Form -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+</main>
