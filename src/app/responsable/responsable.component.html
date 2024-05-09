@@ -1,0 +1,68 @@
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Data Tables</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html" rel="noopener noreferrer">Home</a></li>
+        <li class="breadcrumb-item">Tables</li>
+        <li class="breadcrumb-item active">Data</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Manager Table</h5>
+
+            <!-- Bouton pour ajouter un employé -->
+            <div class="mb-3">
+              <button class="btn btn-link" [routerLink]="['/home/addresponsable']" title="ADD Employee" id="custom-button">
+                <i class="bi bi-person-plus-fill" id="custom-icon"></i>
+            </button>
+
+            </div>
+
+            <!-- Table with stripped rows -->
+            <table class="table datatable">
+              <thead>
+                <tr>
+                  <th scope="col" class="col-text">#</th>
+                  <th scope="col" class="col-text">Full Name</th>
+                  <th scope="col" class="col-text">Registration Number</th>
+                  <th scope="col" class="col-text">Department</th>
+                  <th scope="col" class="col-text">Job</th>
+                  <th scope="col" class="col-text">Email</th>
+                  <th scope="col" class="col-text">ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of listeresponsable | paginate: { itemsPerPage: 3, currentPage: e  }; let i = index">
+                  <th scope="row" class="col-text">{{i+1}}</th>
+                  <td class="col-text">{{r.firstname}} {{r.lastname}} </td>
+                  <td class="col-text">{{r.username}}</td>
+                  <td class="col-text">{{r.department}}</td>
+                  <td class="col-text">{{r.job}}</td>
+                  <td class="col-text">{{r.email}}</td>
+                  <td class="col-action">
+                    <button class="btn btn-info" aria-label="View details"><i class="bi bi-eye"  [routerLink]="['/home/detailsResponsable',r.id]"></i></button>
+                    <button class="btn btn-warning" aria-label="Edit" [routerLink]="['/home/editresponsable',r.id]"><i class="bi bi-pencil"></i> </button>
+                    <button type="button" aria-label="Delete" (click)="deleteResponsable(r.id)" class="btn btn-danger"><i class="bi bi-trash"></i> </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <pagination-controls class="pagination-controls"  (pageChange)="e = $event"></pagination-controls>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main><!-- End #main -->
