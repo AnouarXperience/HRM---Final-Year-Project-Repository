@@ -29,6 +29,7 @@ import { AuthGuard } from './companets/auth/auth.guard';
 import { UserService } from './sevices/user.service';
 import { AuthInterceptor } from './companets/auth/auth.interceptor';
 import { ProfileComponent } from './profile/profile.component';
+import { TokenExpirationService } from './sevices/token-expiration.service';
 
 
 
@@ -74,7 +75,8 @@ import { ProfileComponent } from './profile/profile.component';
       useClass:AuthInterceptor,
       multi:true
     },
-    UserService
+    UserService,
+    TokenExpirationService
   ],
   bootstrap: [AppComponent],
 
