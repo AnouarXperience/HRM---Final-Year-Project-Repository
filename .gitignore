@@ -3,7 +3,6 @@ target/
 build/
 
 # Ignore IDE-specific files and directories
-.idea/
 .vscode/
 
 # Ignore local configuration files
