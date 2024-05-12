@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, NgZone, OnInit } from '@angular/core';
+import { UserService } from 'src/app/sevices/user.service';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,7 @@ import { ChangeDetectorRef, Component, HostListener, NgZone, OnInit } from '@ang
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private zone: NgZone, private cdr: ChangeDetectorRef) { }
+  constructor(private zone: NgZone, private cdr: ChangeDetectorRef,public userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -24,7 +25,7 @@ export class HomeComponent implements OnInit {
       const threshold = 100;
       const yPosition = window.pageYOffset || document.documentElement.scrollTop;
       this.showBackToTop = yPosition > threshold;
-      console.log('Scroll Event Triggered', this.showBackToTop); // Vérifiez si cela s'imprime lors du défilement
+      // console.log('Scroll Event Triggered', this.showBackToTop); // Vérifiez si cela s'imprime lors du défilement
   }
 
   scrollToTop() {

@@ -8,8 +8,8 @@
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item" style="margin-right: 4rem;">
-                    <a *ngIf="! isLoggedIn()" routerLink="/login"  routerLinkActive="active" class="nav-link">Login
-                    </a>
+                    <a *ngIf="! isLoggedIn()" routerLink="/login"  routerLinkActive="active" class="nav-link">Login</a>
+                    <a *ngIf="isLoggedIn()" routerLink="/home" routerLinkActive="active" class="nav-link">Dashboard</a>
                 </li>
             </ul>
         </nav>

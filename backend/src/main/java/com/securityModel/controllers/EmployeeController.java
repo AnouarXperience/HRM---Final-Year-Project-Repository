@@ -199,12 +199,15 @@ public class EmployeeController{
         employee.setRoles(roles);
 
         employeeService.create(employee);
-        // Send confirmation email with temporary password
-        // Prepare and send the confirmation email
+// Send confirmation email with temporary password
+// Prepare and send the confirmation email
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setSubject("Please confirm your account to join our family and gain access to our services");
-        helper.setFrom("no-reply@digid.com"); // Use a more professional from address
+
+// Set sender name and email address
+        helper.setFrom("DIGID HR Department <no-reply@digid.com>");
+
         helper.setTo(signUpRequest.getEmail());
         helper.setText("<HTML><BODY>" +
                 "<H2>Welcome to DIGID! We're thrilled to have you join our family.!</H2>" +

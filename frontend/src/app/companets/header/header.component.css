@@ -1,0 +1,24 @@
+.dashboard-text {
+    /* Choisir une police élégante */
+    /* font-family: Arial, sans-serif;  */
+    /* Taille de police plus grande */
+    /* font-size: 18px; */
+    /* Couleur de texte attrayante */ 
+    /* color: #333; */
+    /* Espacement entre les lettres */ 
+    /* letter-spacing: 1px; */
+    /* Hauteur de ligne pour une meilleure lisibilité */ 
+    /* line-height: 1.5; */
+    /* Espacement interne pour plus d'espace */ 
+    /* padding: 5px 10px; */
+    /* Bordure pour mettre en évidence */ 
+    /* border: 1px solid #ccc; */
+    /* Coins arrondis */
+    /* border-radius: 5px; */
+    /* Couleur de fond légère */
+    /* background-color: #f8f8f8; */
+    /* Ombre portée subtile */
+    /* box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); */
+    font-family: Arial, sans-serif; /* Choisir une police élégante */
+    font-size: 18px; /* Taille de police plus grande */
+  }
