@@ -23,23 +23,23 @@ const routes: Routes = [
   { path: 'acceuil', component: AcceuilComponent },
   { path: 'login', component: LoginComponent },
   {
-    path: "home", component: HomeComponent,canActivate:[AuthGuard], data:{roles:['ROLE_Administrateur']}, children: [
+    path: "home", component: HomeComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable', 'ROLE_Employee'] }, children: [
       { path: "", component: LayoutComponent },
-      { path: "listemployee", component: EmployeeComponent },
-      { path: "detailsemployee/:id", component: DetailsComponent },
-      { path: "addemployee", component:AddemployeeComponent },
-      { path: "editemployee/:id", component:EditemployeeComponent },
-      { path: "listresponsable", component: ResponsableComponent },
-      { path: "addresponsable", component: AddresponsableComponent },
-      { path: "detailsResponsable/:id", component: DetailsResComponent },
-      { path: "editresponsable/:id", component: EditresponsableComponent },
-      { path: "profile", component: ProfileComponent },
-
+      { path: "listemployee", component: EmployeeComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable'] } },
+      { path: "detailsemployee/:id", component: DetailsComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable', 'ROLE_Employee'] } },
+      { path: "addemployee", component: AddemployeeComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur'] } },
+      { path: "editemployee/:id", component: EditemployeeComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur'] } },
+      { path: "listresponsable", component: ResponsableComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable'] } },
+      { path: "addresponsable", component: AddresponsableComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur'] } },
+      { path: "detailsResponsable/:id", component: DetailsResComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable'] } },
+      { path: "editresponsable/:id", component: EditresponsableComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur'] } },
+      { path: "profile", component: ProfileComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable', 'ROLE_Employee'] } },
     ]
   },
-    // Ajoutez un chemin de route spécifique pour afficher uniquement le LoginComponent
-    { path: 'acceuil/login', component: LoginComponent }
+  // Ajoutez un chemin de route spécifique pour afficher uniquement le LoginComponent
+  { path: 'acceuil/login', component: LoginComponent }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

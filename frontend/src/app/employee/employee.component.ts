@@ -14,7 +14,7 @@ export class EmployeeComponent implements OnInit {
   listemployee: any;
   e:number=1
 
-  constructor(private service: EmployeeService, private userService: UserService) { }
+  constructor(private service: EmployeeService, public userService: UserService) { }
 
   ngOnInit(): void {
     this.allemployee(); // Correction ici: Ajoutez les parenthèses pour appeler la méthode.

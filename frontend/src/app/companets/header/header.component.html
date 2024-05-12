@@ -5,7 +5,8 @@
   <div class="d-flex align-items-center justify-content-between">
     <a routerLink="/home" routerLinkActive="active" class="logo d-flex align-items-center">
       <img src="assets/img/logo.png" alt="">
-      <span class="d-none d-lg-block">Dashboard Admin</span>
+      <span class="d-none d-lg-block" *ngIf="userService.roleMatch(['ROLE_Administrateur'])">Dashboard Admin</span>
+      <span class="d-none d-lg-block dashboard-text" *ngIf="userService.roleMatch(['ROLE_Employee'])">Dashboard Employee</span>
     </a>
 
 

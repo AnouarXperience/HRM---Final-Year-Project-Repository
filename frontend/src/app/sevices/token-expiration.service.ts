@@ -11,7 +11,7 @@ export class TokenExpirationService {
   startTokenExpiryCheck(): void {
   setInterval(() => {
     this.checkTokenExpiry();
-  }, 100 * 10); // Check every minute
+  }, 100 * 10); // Check every minute (if you want every second just put 100 * 10)
 }
 
 checkTokenExpiry(): void {

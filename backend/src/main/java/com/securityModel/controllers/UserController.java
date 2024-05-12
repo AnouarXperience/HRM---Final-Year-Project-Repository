@@ -112,8 +112,23 @@ public class UserController {
         helper.setSubject("Password Reset Request");
         helper.setFrom(from);
         helper.setTo(to);
-        helper.setText("<html><body><p>You requested a password reset. Use the code below to set your new password:</p>"
-                + "<p><b>Your code is: " + token + "</b></p></body></html>", true);
+        helper.setText("<html><head><style>"
+                + "a {"
+                + "  background-color: #73e2f0;"
+                + "  border: 1px solid black;"
+                + "  border-radius: 5px;"
+                + "  color: black;"
+                + "  text-align: center;"
+                + "  text-decoration: none;"
+                + "  display: inline-block;"
+                + "  padding: 10px 40px;"
+                + "  font-size: 20px;"
+                + "  cursor: pointer;" // Ajout du style pour le pointeur
+                + "}"
+                + "</style></head><body>"
+                + "<h2><font color='black'>You requested a password reset. Use the code below to set your new password:</font></h2>"
+                + "<a><b>" + token + "</b></a>"
+                + "</body></html>", true);
         javaMailSender.send(mimeMessage);
 
         userRepository.saveAndFlush(userexisting);

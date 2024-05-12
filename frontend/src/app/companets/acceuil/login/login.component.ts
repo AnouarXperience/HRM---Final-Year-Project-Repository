@@ -11,16 +11,16 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  // username: string = '';
-  // password: string = '';
   form: FormGroup;
   formSubmitted: boolean = false;
   showForgotPasswordForm = false;
   showResetPasswordForm = false;
   email: string = '';
   resetPasswordForm: FormGroup;
+  showPassword: boolean = false;
   isLoading: boolean = false;
-
+  failedAttempts: number = 0;
+  resetPasswordSuccessful: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -36,74 +36,167 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required],
     });
     this.initForm();
+    // Check if the user is already logged in
+    if (this.UserAuthService.isLoggedIn()) {
+    // Redirect the user to the home page or another page
+        this.router.navigate(['/']);
+    }
   }
+
   initForm() {
     this.resetPasswordForm = this.formbuilder.group({
-      verificationCode: ['', Validators.required], // make sure this name matches your form's input binding
+      verificationCode: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  // Login Normal Version working with third time navigate to forgot password automatically
+  // login() {
+  //   // console.log("Login button clicked");
+  //   this.formSubmitted = true;
+  //   if (this.form.valid) {
+  //     this.userService.login(this.form.value).subscribe(
+  //       (response: any) => {
+  //         const roles = response.roles;
+  //         const jwtToken = response.accessToken;
+
+  //         if (roles && jwtToken) {
+  //           this.UserAuthService.setRoles(roles);
+  //           this.UserAuthService.setToken(jwtToken);
+
+  //           const isAdmin = roles.includes('ROLE_Administrateur');
+  //           if (isAdmin) {
+  //             this.router.navigate(['/home']);
+  //             console.log('Login successful');
+  //           } else {
+  //             this.router.navigate(['/acceuil/login']);
+  //           }
+  //         } else {
+  //           console.error('Invalid response format: ', response);
+  //         }
+  //       },
+  //       (error) => {
+  //         console.error('Login failed:', error);
+  //         Swal.fire('Login Failed', 'Invalid email or password', 'error');
+  //       }
+  //     );
+  //   }
+  // }
 
 
+  // Login Second Version eliminate the atomical navigation to forgot password but added loader every time fell free to use the first login or the second one 
   login() {
-    // Log the loginForm to inspect its structure
-    // console.log('Login Form:', loginForm);
+    // console.log("Login button clicked");
     this.formSubmitted = true;
-    if (this.form.valid) {
-      // Proceed with login logic
+  
+    // Check if the login process is ongoing
+    if (!this.isLoading && this.form.valid) {
+      // Show the loader when the login request starts
+      this.isLoading = true;
+  
       this.userService.login(this.form.value).subscribe(
         (response: any) => {
-          const roles = response.roles; // Assuming roles is an array of role names
+          const roles = response.roles;
           const jwtToken = response.accessToken;
-
+  
           if (roles && jwtToken) {
-            this.UserAuthService.setRoles(roles); // You might need to map role names to role IDs here
+            this.UserAuthService.setRoles(roles);
             this.UserAuthService.setToken(jwtToken);
-
-            const isAdmin = roles.includes('ROLE_Administrateur'); // Assuming 'ROLE_Administrateur' represents the admin role
-            if (isAdmin) {
-              this.router.navigate(['/home']); // Redirect admin to home
-              // Proceed with login logic
+  
+            const isAdmin = roles.includes('ROLE_Administrateur');
+            const isManager = roles.includes('ROLE_Responsable');
+            const Employee = roles.includes('ROLE_Employee');
+            if (isAdmin || isManager || Employee) {
+              this.router.navigate(['/home']);
               console.log('Login successful');
             } else {
-              this.router.navigate(['/acceuil/login']); // Redirect regular user to acceuil
+              this.router.navigate(['/acceuil/login']);
             }
           } else {
             console.error('Invalid response format: ', response);
-            // Handle invalid response format gracefully, e.g., display error message to the user
           }
+          // Hide the loader after login request is completed
+          this.isLoading = false;
         },
         (error) => {
-          console.error('Login failed:', error); // Handle login error
-          // Handle login error gracefully, e.g., display error message to the user
+          console.error('Login failed:', error);
           Swal.fire('Login Failed', 'Invalid email or password', 'error');
+          // Increment the failedAttempts counter
+          this.failedAttempts++;
+          // Check if the number of failed attempts is equal to 3
+          if (this.failedAttempts === 3) {
+            // If so, do not show the forgot password form
+            // or anything else
+            this.isLoading = false;
+            return;
+          }
+          // Hide the loader after login request is completed
+          this.isLoading = false;
         }
       );
     }
   }
+  
+  
 
   forgotPass() {
     this.showForgotPasswordForm = true;
   }
 
+  // forgotPassword version old version compatible with Login Normal Version
+  // forgotPassword() {
+  //   if (!this.email) {
+  //     Swal.fire('Error', 'Please enter your email.', 'error');
+  //     return;
+  //   }
+  //   this.isLoading = true;
+  //   this.userService.forgotPass(this.email).subscribe({
+  //     next: (response: any) => {
+  //       if (response.user === 'user not found') {
+  //         Swal.fire('Error', 'User not found. Please check your email and try again.', 'error');
+  //       } else {
+  //         Swal.fire('Success', 'Please check your email to reset your password.', 'success').then((result) => {
+  //           if (result.isConfirmed || result.isDismissed) {
+  //             this.showForgotPasswordForm = false;
+  //             this.showResetPasswordForm = true;
+  //           }
+  //         });
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error occurred:', error);
+  //       Swal.fire('Error', 'Failed to send reset link. Please try again later.', 'error');
+  //     },
+  //     complete: () => {
+  //       this.isLoading = false;
+  //     }
+  //   });
+  // }
+
+
+  // The New Version of forgotPassword 
   forgotPassword() {
     if (!this.email) {
       Swal.fire('Error', 'Please enter your email.', 'error');
       return;
     }
   
-    // Affichez le loader
+    // Show the loader when the forgot password request starts
+    // console.log("Forgot password request initiated...");
     this.isLoading = true;
   
     this.userService.forgotPass(this.email).subscribe({
       next: (response: any) => {
+        console.log("Forgot password request successful:", response);
         if (response.user === 'user not found') {
           Swal.fire('Error', 'User not found. Please check your email and try again.', 'error');
         } else {
           Swal.fire('Success', 'Please check your email to reset your password.', 'success').then((result) => {
             if (result.isConfirmed || result.isDismissed) {
-              // Réinitialiser l'email et afficher le formulaire de réinitialisation du mot de passe
               this.showForgotPasswordForm = false;
               this.showResetPasswordForm = true;
             }
@@ -111,15 +204,18 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error occurred:', error);
+        // console.error('Error occurred:', error);
         Swal.fire('Error', 'Failed to send reset link. Please try again later.', 'error');
       },
       complete: () => {
-        // Masquez le loader une fois que la requête est terminée
+        // Hide the loader after the forgot password request is completed
+        console.log("Forgot password request completed.");
         this.isLoading = false;
       }
     });
   }
+  
+  
   
 
   resetPassword() {
@@ -131,10 +227,10 @@ export class LoginComponent implements OnInit {
         next: (response) => {
           Swal.fire('Success!', 'Your password has been successfully reset. Please login with your new password.', 'success').then((result) => {
             if (result.isConfirmed || result.isDismissed) {
-              // Reset the resetPasswordForm and show the login form
               this.resetPasswordForm.reset();
               this.showResetPasswordForm = false;
               this.showForgotPasswordForm = false;
+              this.resetPasswordSuccessful = true;
             }
           });
         },
@@ -147,8 +243,4 @@ export class LoginComponent implements OnInit {
       Swal.fire('Attention!', 'Please check the form for errors.', 'info');
     }
   }
-
-
-
-
 }
