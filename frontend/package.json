@@ -25,6 +25,7 @@
     "bootstrap": "^5.3.3",
     "jquery": "^3.7.1",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "ngx-pagination": "^6.0.3",
     "rxjs": "~7.5.0",
     "sweetalert2": "^11.9.0",

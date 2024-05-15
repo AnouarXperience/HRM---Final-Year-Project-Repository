@@ -20,7 +20,7 @@
 
             <img [src]="imageUrl" alt="Profile" class="rounded-circle">
             <h2>{{ oneemployee?.firstname }} {{ oneemployee?.lastname }}</h2>
-            <h3>{{ oneemployee?.post }}</h3>
+            <h3>{{ oneemployee?.job }}</h3>
           </div>
         </div>
 
@@ -38,6 +38,10 @@
 
 
                 <h5 class="card-title">Profile Details</h5>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label ">Registration Number</div>
+                  <div class="col-lg-9 col-md-8">{{ oneemployee?.username }}</div>
+                </div>
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label ">Full Name</div>
@@ -86,10 +90,23 @@
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label">Hiring date</div>
-                  <div class="col-lg-9 col-md-8">{{ oneemployee?.hire_date}}</div>
+                  <div class="col-lg-9 col-md-8">{{ oneemployee?.hire_date | date:'yyyy-MM-dd HH:mm' }}</div>
                 </div>
 
 
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Role</div>
+                  <div class="col-lg-9 col-md-8">
+                    <div *ngFor="let role of oneemployee?.roles" class="role-item">
+                      {{ role.name }}
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                <button (click)="downloadProfile()" class="btn btn-primary mt-3">Download Profile Details</button>
 
               </div>
 
@@ -102,6 +119,7 @@
 </div>
       </div>
     </div>
+
 </section>
 
 

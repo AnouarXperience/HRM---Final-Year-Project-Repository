@@ -1,70 +1,82 @@
-<!-- <main id="main" class="main" *ngIf="userService.roleMatch(['ROLE_Administrateur'])"> -->
-<main id="main" class="main" *ngIf="userService.roleMatch(['ROLE_Administrateur'])">
+<!-- <main id="main" class="main" *ngIf="UserService.roleMatch(['Administrateur'])"> -->
+  <main id="main" class="main">
 
-  <div class="pagetitle">
-    <h1>Data Tables</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html" rel="noopener noreferrer">Home</a></li>
-        <li class="breadcrumb-item">Tables</li>
-        <li class="breadcrumb-item active">Data</li>
-      </ol>
-    </nav>
-  </div><!-- End Page Title -->
-
-  <section class="section">
-    <div class="row">
-      <div class="col-lg-12">
-
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Employee Table</h5>
-
-            <!-- Bouton pour ajouter un employé -->
-            <div class="mb-3">
-              <button class="btn btn-link" [routerLink]="['/home/addemployee']" title="ADD Employee" id="custom-button">
-                <i class="bi bi-person-plus-fill" id="custom-icon"></i>
-            </button>
-
+    <div class="pagetitle">
+      <h1>Data Tables</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html" rel="noopener noreferrer">Home</a></li>
+          <li class="breadcrumb-item">Tables</li>
+          <li class="breadcrumb-item active">Data</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+  
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-end align-items-center mt-2">
+                <!-- Search bar -->
+                <div class="search-bar position-relative mt-2">
+                    <input type="search" id="searchInput" name="query" placeholder="Search" title="Enter search keyword"
+                           class="form-control pl-5 pr-5 custom-search-input" [(ngModel)]="search" (input)="updateSearch()">
+                    <i class="bi bi-search position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"
+                       [ngClass]="{'d-none': search.length > 0}"></i>
+                    <i class="bi bi-x-lg position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;"
+                       [ngClass]="{'d-none': search.length === 0}" (click)="clearSearch()"></i>
+                </div>
             </div>
-
-            <!-- Table with stripped rows -->
-            <table class="table datatable">
-              <thead>
-                <tr>
-                  <th scope="col" class="col-text">#</th>
-                  <th scope="col" class="col-text">Full Name</th>
-                  <th scope="col" class="col-text">Registration Number</th>
-                  <th scope="col" class="col-text">Department</th>
-                  <th scope="col" class="col-text">Job</th>
-                  <th scope="col" class="col-text">Email</th>
-                  <th scope="col" class="col-action">ACTION</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let e of listemployee | paginate: { itemsPerPage: 5, currentPage: e  }; let i = index">
-                  <th scope="row" class="col-text">{{i+1}}</th>
-                  <td class="col-text">{{e.firstname}} {{e.lastname}}</td>
-                  <td class="col-text">{{e.username}}</td>
-                  <td class="col-text">{{e.department}}</td>
-                  <td class="col-text">{{e.job}}</td>
-                  <td class="col-text">{{e.email}}</td>
-                  <td class="col-action">
-                    <button class="btn btn-info" aria-label="View details"><i class="bi bi-eye"  [routerLink]="['/home/detailsemployee', e.id]"></i></button>
-                    <button class="btn btn-warning" aria-label="Edit" [routerLink]="['/home/editemployee', e.id]"><i class="bi bi-pencil"></i></button>
-                    <button class="btn btn-danger" aria-label="Delete" (click)="deleteemployee(e.id)"><i class="bi bi-trash"></i></button>
-                  </td>
-                </tr>
-              </tbody>
-
-            </table>
-            <pagination-controls class="pagination-controls"  (pageChange)="e = $event"></pagination-controls>
-            <!-- End Table with stripped rows -->
-
+  
+  
+  
+              <!-- Bouton pour ajouter un employé -->
+              <div class="mb-3">
+                <button class="btn btn-link" [routerLink]="['/home/addemployee']" title="ADD Employee" id="custom-button">
+                  <i class="bi bi-person-plus-fill" id="custom-icon"></i>
+              </button>
+  
+              </div>
+  
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col" class="col-text">#</th>
+                    <th scope="col" class="col-text">Full Name</th>
+                    <th scope="col" class="col-text">Registration Number</th>
+                    <th scope="col" class="col-text">Department</th>
+                    <th scope="col" class="col-text">Job</th>
+                    <th scope="col" class="col-text">Email</th>
+                    <th scope="col" class="col-action">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let e of listemployee | rechercheEmployee:search | paginate: { itemsPerPage: 5, currentPage: e  }; let i = index">
+                    <th scope="row" class="col-text">{{i+1}}</th>
+                    <td class="col-text">{{e.firstname}} {{e.lastname}}</td>
+                    <td class="col-text">{{e.username}}</td>
+                    <td class="col-text">{{e.department}}</td>
+                    <td class="col-text">{{e.job}}</td>
+                    <td class="col-text">{{e.email}}</td>
+                    <td class="col-action">
+                      <button class="btn btn-info" aria-label="View details"><i class="bi bi-eye"  [routerLink]="['/home/detailsemployee', e.id]"></i></button>
+                      <button class="btn btn-warning" aria-label="Edit" [routerLink]="['/home/editemployee', e.id]"><i class="bi bi-pencil"></i></button>
+                      <button class="btn btn-danger" aria-label="Delete" (click)="deleteemployee(e.id)"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+  
+              </table>
+              <pagination-controls class="pagination-controls"  (pageChange)="e = $event"></pagination-controls>
+              <!-- End Table with stripped rows -->
+  
+            </div>
           </div>
+  
         </div>
-
       </div>
-    </div>
-  </section>
-</main><!-- End #main -->
+    </section>
+  </main><!-- End #main -->  

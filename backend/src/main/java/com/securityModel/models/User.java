@@ -11,10 +11,10 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-@Table(	name = "users", 
+@Table(	name = "users",
 		uniqueConstraints = {
-			@UniqueConstraint(columnNames = "username"),
-			@UniqueConstraint(columnNames = "email")
+				@UniqueConstraint(columnNames = "username"),
+				@UniqueConstraint(columnNames = "email")
 		})
 public abstract class User {
 	@Id
@@ -39,7 +39,7 @@ public abstract class User {
 	private boolean confirme = false;
 	private String passwordResetToken;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(	name = "user_roles",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))

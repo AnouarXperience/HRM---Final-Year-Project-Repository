@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
   //           this.UserAuthService.setRoles(roles);
   //           this.UserAuthService.setToken(jwtToken);
 
-  //           const isAdmin = roles.includes('ROLE_Administrateur');
+  //           const isAdmin = roles.includes('Administrateur');
   //           if (isAdmin) {
   //             this.router.navigate(['/home']);
   //             console.log('Login successful');
@@ -107,23 +107,23 @@ export class LoginComponent implements OnInit {
             this.UserAuthService.setRoles(roles);
             this.UserAuthService.setToken(jwtToken);
   
-            const isAdmin = roles.includes('ROLE_Administrateur');
-            const isManager = roles.includes('ROLE_Responsable');
-            const Employee = roles.includes('ROLE_Employee');
+            const isAdmin = roles.includes('Administrateur');
+            const isManager = roles.includes('Responsable');
+            const Employee = roles.includes('Employee');
             if (isAdmin || isManager || Employee) {
               this.router.navigate(['/home']);
-              console.log('Login successful');
+              // console.log('Login successful');
             } else {
               this.router.navigate(['/acceuil/login']);
             }
           } else {
-            console.error('Invalid response format: ', response);
+            // console.error('Invalid response format: ', response);
           }
           // Hide the loader after login request is completed
           this.isLoading = false;
         },
         (error) => {
-          console.error('Login failed:', error);
+          // console.error('Login failed:', error);
           Swal.fire('Login Failed', 'Invalid email or password', 'error');
           // Increment the failedAttempts counter
           this.failedAttempts++;
@@ -191,7 +191,7 @@ export class LoginComponent implements OnInit {
   
     this.userService.forgotPass(this.email).subscribe({
       next: (response: any) => {
-        console.log("Forgot password request successful:", response);
+        // console.log("Forgot password request successful:", response);
         if (response.user === 'user not found') {
           Swal.fire('Error', 'User not found. Please check your email and try again.', 'error');
         } else {
@@ -209,7 +209,7 @@ export class LoginComponent implements OnInit {
       },
       complete: () => {
         // Hide the loader after the forgot password request is completed
-        console.log("Forgot password request completed.");
+        // console.log("Forgot password request completed.");
         this.isLoading = false;
       }
     });

@@ -8,10 +8,6 @@ import { EmployeeComponent } from './employee/employee.component';
 import { AddemployeeComponent } from './employee/addemployee/addemployee.component';
 import { EditemployeeComponent } from './employee/editemployee/editemployee.component';
 import { DetailsComponent } from './employee/details/details.component';
-import { ResponsableComponent } from './responsable/responsable.component';
-import { AddresponsableComponent } from './responsable/addresponsable/addresponsable.component';
-import { EditresponsableComponent } from './responsable/editresponsable/editresponsable.component';
-import { DetailsResComponent } from './responsable/details-res/details-res.component';
 import { AuthGuard } from './companets/auth/auth.guard';
 import { ProfileComponent } from './profile/profile.component';
 
@@ -23,17 +19,13 @@ const routes: Routes = [
   { path: 'acceuil', component: AcceuilComponent },
   { path: 'login', component: LoginComponent },
   {
-    path: "home", component: HomeComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable', 'ROLE_Employee'] }, children: [
+    path: "home", component: HomeComponent, canActivate: [AuthGuard], data: { roles: ['Administrateur', 'Responsable', 'Employee'] }, children: [
       { path: "", component: LayoutComponent },
-      { path: "listemployee", component: EmployeeComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable'] } },
-      { path: "detailsemployee/:id", component: DetailsComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable', 'ROLE_Employee'] } },
-      { path: "addemployee", component: AddemployeeComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur'] } },
-      { path: "editemployee/:id", component: EditemployeeComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur'] } },
-      { path: "listresponsable", component: ResponsableComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable'] } },
-      { path: "addresponsable", component: AddresponsableComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur'] } },
-      { path: "detailsResponsable/:id", component: DetailsResComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable'] } },
-      { path: "editresponsable/:id", component: EditresponsableComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur'] } },
-      { path: "profile", component: ProfileComponent, canActivate: [AuthGuard], data: { roles: ['ROLE_Administrateur', 'ROLE_Responsable', 'ROLE_Employee'] } },
+      { path: "listemployee", component: EmployeeComponent, canActivate: [AuthGuard], data: { roles: ['Administrateur', 'Responsable'] } },
+      { path: "detailsemployee/:id", component: DetailsComponent, canActivate: [AuthGuard], data: { roles: ['Administrateur', 'Responsable', 'Employee'] } },
+      { path: "addemployee", component: AddemployeeComponent, canActivate: [AuthGuard], data: { roles: ['Administrateur'] } },
+      { path: "editemployee/:id", component: EditemployeeComponent, canActivate: [AuthGuard], data: { roles: ['Administrateur'] } },
+      { path: "profile", component: ProfileComponent, canActivate: [AuthGuard], data: { roles: ['Administrateur', 'Responsable', 'Employee'] } },
     ]
   },
   // Ajoutez un chemin de route spécifique pour afficher uniquement le LoginComponent

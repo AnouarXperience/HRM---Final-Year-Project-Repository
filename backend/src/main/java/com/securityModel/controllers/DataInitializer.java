@@ -33,21 +33,21 @@ public class DataInitializer implements CommandLineRunner {
         // Vérifiez d'abord si les rôles existent déjà
         if (roleRepository.count() == 0) {
             // Si les rôles n'existent pas, créez-les et enregistrez-les dans la base de données
-            roleRepository.save(new Role(ERole.ROLE_Administrateur));
-            roleRepository.save(new Role(ERole.ROLE_Responsable));
-            roleRepository.save(new Role(ERole.ROLE_Employee));
-
-
+            roleRepository.save(new Role(ERole.Administrateur));
+            roleRepository.save(new Role(ERole.Responsable));
+            roleRepository.save(new Role(ERole.Employee));
+            roleRepository.save(new Role(ERole.Recruteur));
         }
+
 
         // Vérifiez si l'administrateur existe déjà
         if (userRepository.findByUsername("admin").isEmpty()) {
             // Si l'administrateur n'existe pas, créez un utilisateur administrateur et enregistrez-le dans la base de données
-            Administrateur adminUser = new Administrateur("admin", "admin@gmail.com", passwordEncoder.encode("123456789"),"vide");
+            Administrateur adminUser = new Administrateur("admin", "digid.tunis@gmail.com", passwordEncoder.encode("123456789"),"vide");
             adminUser.setConfirme(true);
             // Créez une liste de rôles et ajoutez le rôle administrateur à cette liste
             Set<Role> roles = new HashSet<>();
-            Role adminRole = roleRepository.findByName(ERole.ROLE_Administrateur)
+            Role adminRole = roleRepository.findByName(ERole.Administrateur)
                     .orElseThrow(() -> new RuntimeException("ERole not found"));
             roles.add(adminRole);
             adminUser.setRoles(roles);

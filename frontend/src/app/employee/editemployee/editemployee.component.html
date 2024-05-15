@@ -103,12 +103,6 @@
                     </div>
                   </div>
                   <div class="row mb-3">
-                    <label for="identityCard" class="col-md-4 col-lg-3 col-form-label">Identity Card</label>
-                    <div class="col-md-8 col-lg-9">
-                      <input type="text" class="form-control" id="identityCard" formControlName="id_card">
-                    </div>
-                  </div>
-                  <div class="row mb-3">
                     <label for="dateOfBirth" class="col-md-4 col-lg-3 col-form-label">Date of Birth</label>
                     <div class="col-md-8 col-lg-9">
                       <input type="date" class="form-control" id="dateOfBirth" formControlName="date_birth">
@@ -120,7 +114,16 @@
                       <input type="text" class="form-control" id="registrationNumber" formControlName="address">
                     </div>
                   </div>
-
+                  <div class="row mb-3">
+                    <label for="role" class="col-md-4 col-lg-3 col-form-label">Role</label>
+                    <div class="col-md-8 col-lg-9">
+                        <select class="form-control" id="role" formControlName="role">
+                            <option *ngFor="let role of availableRoles" [value]="role.id">
+                                {{ role.name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
 
 
                   <div class="text-end">

@@ -20,16 +20,15 @@ import { EmployeeComponent } from './employee/employee.component';
 import { AddemployeeComponent } from './employee/addemployee/addemployee.component';
 import { EditemployeeComponent } from './employee/editemployee/editemployee.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { ResponsableComponent } from './responsable/responsable.component';
-import { AddresponsableComponent } from './responsable/addresponsable/addresponsable.component';
-import { EditresponsableComponent } from './responsable/editresponsable/editresponsable.component';
-import { DetailsResComponent } from './responsable/details-res/details-res.component';
 import { LoaderComponent } from './companets/loader/loader.component';
 import { AuthGuard } from './companets/auth/auth.guard';
 import { UserService } from './sevices/user.service';
 import { AuthInterceptor } from './companets/auth/auth.interceptor';
 import { ProfileComponent } from './profile/profile.component';
 import { TokenExpirationService } from './sevices/token-expiration.service';
+import { RechercheEmployeePipe } from './pipes/recherche-employee.pipe';
+import { CommonModule } from '@angular/common';
+import { DetailsComponent } from './employee/details/details.component';
 
 
 
@@ -52,12 +51,10 @@ import { TokenExpirationService } from './sevices/token-expiration.service';
     EmployeeComponent,
     AddemployeeComponent,
     EditemployeeComponent,
-    ResponsableComponent,
-    AddresponsableComponent,
-    EditresponsableComponent,
-    DetailsResComponent,
+    DetailsComponent,
     LoaderComponent,
-    ProfileComponent
+    ProfileComponent,
+    RechercheEmployeePipe
   ],
   imports: [
     BrowserModule,
@@ -67,7 +64,8 @@ import { TokenExpirationService } from './sevices/token-expiration.service';
     FormsModule,
     NgbModule,
     NgxPaginationModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule
   ],
   providers: [   AuthGuard,
     {
