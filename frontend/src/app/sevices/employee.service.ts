@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Role } from '../employee/addemployee/addemployee.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,11 @@ export class EmployeeService {
   getallemployee(){
     return this.http.get(`${environment.baseurl}/employee/all`);
    }
+
+
+   getAllroles(): Observable<Role[]> {
+    return this.http.get<Role[]>(`${environment.baseurl}/roles/all`);
+  }
 
    signupEmployee(signUpRequest: any, file?: File) {
     const formData: FormData = new FormData();
@@ -35,9 +42,10 @@ export class EmployeeService {
     return this.http.delete(`${environment.baseurl}/employee/delete/${id}`)
   }
 
-  getemployee(id:any){
-    return this.http.get(`${environment.baseurl}/employee/getone/${id}`)
-    }
+  getemployee(id: any): Observable<any> { // Here 'any' allows flexibility
+    return this.http.get<any>(`${environment.baseurl}/employee/getone/${id}`);
+  }
+
 
     modfieremployee(id: any, employeeData: any, selectedFile?: File) {
       const formData = new FormData();
@@ -63,17 +71,4 @@ export class EmployeeService {
   checkEmailExists(email: string): Observable<boolean> {
     return this.http.get<boolean>(`${environment.baseurl}/employee/exists/email/${email}`);
   }
-
-
-
-
-
-
-
   }
-
-
-
-
-
-

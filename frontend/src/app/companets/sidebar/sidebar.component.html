@@ -22,7 +22,7 @@
     </li>
     <!-- End Profile Page Nav -->
 
-    <li class="nav-item" *ngIf="userService.roleMatch(['ROLE_Administrateur'])">
+    <li class="nav-item" *ngIf="userService.roleMatch(['Administrateur','Responsable'])">
       <a class="nav-link collapsed always-visible" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-menu-button-wide"></i><span>Users</span>
         <i class="bi bi-chevron-down ms-auto hide-in-icon-only"></i>
@@ -35,16 +35,6 @@
         <li>
           <a routerLink="/home/listemployee">
             <i class="bi bi-circle"></i><span>Employees List</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink="/home/listresponsable">
-            <i class="bi bi-circle"></i><span>Managers List</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink="/home">
-            <i class="bi bi-circle"></i><span>Recruiters List </span>
           </a>
         </li>
       </ul>

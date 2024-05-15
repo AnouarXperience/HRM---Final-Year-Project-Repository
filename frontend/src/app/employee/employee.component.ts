@@ -13,8 +13,10 @@ export class EmployeeComponent implements OnInit {
 
   listemployee: any;
   e:number=1
+  search: string = '';
+  isInputFocused = false;
 
-  constructor(private service: EmployeeService, public userService: UserService) { }
+  constructor(private service: EmployeeService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.allemployee(); // Correction ici: Ajoutez les parenthèses pour appeler la méthode.
@@ -23,7 +25,7 @@ export class EmployeeComponent implements OnInit {
   allemployee() {
     this.service.getallemployee().subscribe((res: any) => {
       this.listemployee = res;
-      console.log("list of employee :", this.listemployee);
+      // console.log("list of employee :", this.listemployee);
     });
   }
 
@@ -64,5 +66,13 @@ export class EmployeeComponent implements OnInit {
       }
     });
 }
+updateSearch(): void {
+  // This method is triggered on each input event
+  // It can contain logic to filter data or simply trigger Angular's change detection
+}
 
+clearSearch(): void {
+  this.search = '';  // Clears the search input
+  this.updateSearch();  // Optionally update list or icons
+}
 }

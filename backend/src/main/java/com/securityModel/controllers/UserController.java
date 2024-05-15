@@ -104,7 +104,7 @@ public class UserController {
         String token = RandomCodeGenerator.generateRandomCode();
         userexisting.setPasswordResetToken(token);
         userexisting.setId(userexisting.getId());
-        String from ="admin@gmail.com" ;
+        String from ="no-reply@digid.com" ;
         String to = userexisting.getEmail();
         String resetLink = "http://localhost:4200/resetpassword?token=" + token;
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

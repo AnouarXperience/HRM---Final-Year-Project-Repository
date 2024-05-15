@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 // import { UserService } from 'src/app/sevices/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserAuthService {
+  private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn());
 
-  constructor()
-  {}
+  constructor() {}
+
   public setRoles(roles: string[]): void {
     localStorage.setItem('roles', JSON.stringify(roles));
   }
@@ -18,20 +20,24 @@ export class UserAuthService {
 
   public setToken(jwtToken: string): void {
     localStorage.setItem('jwtToken', jwtToken);
+    this.loggedIn.next(true);
   }
 
   public getToken(): string {
     return localStorage.getItem('jwtToken');
   }
 
-  public clear() {
+  public clear(): void {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('roles');
+    this.loggedIn.next(false);
   }
 
   public isLoggedIn(): boolean {
     return !!this.getToken();
   }
 
-  
+  public getLoggedInObservable() {
+    return this.loggedIn.asObservable();
+  }
 }

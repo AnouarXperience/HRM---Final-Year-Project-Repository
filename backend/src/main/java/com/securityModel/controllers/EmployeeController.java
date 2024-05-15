@@ -18,12 +18,14 @@ import com.securityModel.utils.EmailService;
 import com.securityModel.utils.StorgeService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -32,6 +34,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +43,7 @@ import java.util.Map;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("*")
@@ -82,9 +87,14 @@ public class EmployeeController{
         return employeeService.create(e);
     }
 
-    @GetMapping("getone/{id}")
-    public Employee getone(@PathVariable Long id) {
-        return employeeService.getbyId(id);
+    @GetMapping("/getone/{id}")
+    public ResponseEntity<Employee> getOne(@PathVariable Long id) {
+        try {
+            Employee employee = employeeService.getbyId(id);
+            return ResponseEntity.ok(employee);
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 
@@ -176,7 +186,7 @@ public class EmployeeController{
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
-
+        // La ligne suivante suppose que vous avez un setter pour 'image' dans votre objet Employee ou un constructeur adapté.
         String fileName;
         try {
             fileName = storgeService.store(file);
@@ -187,25 +197,63 @@ public class EmployeeController{
         String tempPassword = RandomStringUtils.randomAlphanumeric(10);
 
         // Ici, vous devez adapter la création de votre objet Employee selon votre constructeur réel.
-        // La ligne suivante suppose que vous avez un setter pour 'image' dans votre objet Employee ou un constructeur adapté.
         Employee employee = new Employee(signUpRequest.getUsername(), signUpRequest.getEmail(),
-                encoder.encode(tempPassword),fileName, signUpRequest.getFirstname(), signUpRequest.getLastname(), signUpRequest.getAddress(), signUpRequest.getDepartment(),signUpRequest.getDate_birth(), signUpRequest.getJob(),  signUpRequest.getHire_date(),
-                signUpRequest.getSalary(), signUpRequest.getId_card(), signUpRequest.getPhone());
+                encoder.encode(tempPassword), fileName, signUpRequest.getFirstname(), signUpRequest.getLastname(),
+                signUpRequest.getAddress(), signUpRequest.getDepartment(), signUpRequest.getDate_birth(),
+                signUpRequest.getJob(), signUpRequest.getHire_date(), signUpRequest.getSalary(),
+                signUpRequest.getId_card(), signUpRequest.getPhone());
 
+//        Set<String> strRoles = signUpRequest.getRole();
+//        Set<Role> roles = new HashSet<>();
+//
+//        if (strRoles == null) {
+//            Role userRole = roleRepository.findByName(ERole.ROLE_Employee)
+//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//            roles.add(userRole);
+//        } else {
+//            strRoles.forEach(role -> {
+//                switch (role) {
+//                    case "ROLE_Employee":
+//                        Role EmRole = roleRepository.findByName(ERole.ROLE_Employee)
+//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//                        roles.add(EmRole);
+//
+//                        break;
+//                    case "ROLE_Responsable":
+//                        Role ResRole = roleRepository.findByName(ERole.ROLE_Responsable)
+//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//                        roles.add(ResRole);
+//
+//                        break;
+//                    default:
+//                        Role adminRole = roleRepository.findByName(ERole.ROLE_Administrateur)
+//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//                        roles.add(adminRole);
+//                }
+//            });
+//        }
+//
+//        employee.setRoles(roles);
+//        userRepository.save(employee);
+
+        // Set role for user account
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName(ERole.ROLE_Employee)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(userRole);
+        for (String roleName : signUpRequest.getRole()) {
+            Role role = roleRepository.findByName(ERole.valueOf(roleName))
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(role);
+        }
         employee.setRoles(roles);
-
         employeeService.create(employee);
-// Send confirmation email with temporary password
-// Prepare and send the confirmation email
+
+
+        // Send confirmation email with temporary password
+        // Prepare and send the confirmation email
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setSubject("Please confirm your account to join our family and gain access to our services");
 
-// Set sender name and email address
+        // Set sender name and email address
         helper.setFrom("DIGID HR Department <no-reply@digid.com>");
 
         helper.setTo(signUpRequest.getEmail());
@@ -227,6 +275,7 @@ public class EmployeeController{
         if (!userRepository.existsById(updateRequest.getId())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Employee not found!"));
         }
+        // Retrieve the existing employee from the database
         Employee existingEmployee = employeeService.getById(updateRequest.getId());
         // Handle file upload
         if (file != null && !file.isEmpty()) {
@@ -240,28 +289,74 @@ public class EmployeeController{
         }
 
 
-        // Retrieve the existing employee from the database
+        // Extract roles from the request
+//        Set<String> strRoles = updateRequest.getRole();
+//        Set<Role> roles = new HashSet<>();
+//
+//        if (strRoles != null) {
+//            roles = strRoles.stream()
+//                    .map(role -> {
+//                        switch (role) {
+//                            case "ROLE_Employee":
+//                                return roleRepository.findByName(ERole.ROLE_Employee)
+//                                        .orElseThrow(() -> new RuntimeException("Error: Role not found."));
+//                            case "ROLE_Responsable":
+//                                return roleRepository.findByName(ERole.ROLE_Responsable)
+//                                        .orElseThrow(() -> new RuntimeException("Error: Role not found."));
+//                            case "ROLE_Administrateur":
+//                                return roleRepository.findByName(ERole.ROLE_Administrateur)
+//                                        .orElseThrow(() -> new RuntimeException("Error: Role not found."));
+//                            default:
+//                                throw new RuntimeException("Error: Invalid role provided.");
+//                        }
+//                    })
+//                    .collect(Collectors.toSet());
+//        }
+
+//        // Extract roles from the request Second Method
+//        Set<String> strRoles = updateRequest.getRole();
+//        Set<Role> roles = new HashSet<>();
+
+//        if (strRoles != null) {
+//            strRoles.forEach(role -> {
+//                Role selectedRole = roleRepository.findByName(ERole.valueOf(role))
+//                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//                roles.add(selectedRole);
+//            });
+//        }
+//
+//        // Assign roles to the employee
+//        existingEmployee.setRoles(roles);
 
 
-        // Update the employee with new data
-        existingEmployee.setFirstname(updateRequest.getFirstname());
-        existingEmployee.setLastname(updateRequest.getLastname());
-        existingEmployee.setAddress(updateRequest.getAddress());
-        existingEmployee.setDepartment(updateRequest.getDepartment());
-        existingEmployee.setDate_birth(updateRequest.getDate_birth());
-        existingEmployee.setJob(updateRequest.getJob());
-        existingEmployee.setHire_date(updateRequest.getHire_date());
-        existingEmployee.setSalary(updateRequest.getSalary());
-        existingEmployee.setId_card(updateRequest.getId_card());
-        existingEmployee.setPhone(updateRequest.getPhone());
 
-        // Set the image file name
-       // existingEmployee.setImage(fileName);
 
-        // Save the updated employee
+        // Extract and set roles from the request
+        if (updateRequest.getRole() != null) {
+            Set<Role> roles = updateRequest.getRole().stream()
+                    .map(roleName -> roleRepository.findByName(ERole.valueOf(roleName))
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error: Role not found - " + roleName)))
+                    .collect(Collectors.toSet());
+            existingEmployee.setRoles(roles);
+        }
+
+        // Update employee data
+        updateEmployeeData(existingEmployee, updateRequest);
         employeeService.update(existingEmployee);
 
         return ResponseEntity.ok(new MessageResponse("Employee updated successfully!"));
+    }
+
+    private void updateEmployeeData(Employee employee, UpdateEmployeeRequest request) {
+        employee.setFirstname(request.getFirstname());
+        employee.setLastname(request.getLastname());
+        employee.setAddress(request.getAddress());
+        employee.setDepartment(request.getDepartment());
+        employee.setDate_birth(request.getDate_birth());
+        employee.setJob(request.getJob());
+        employee.setHire_date(request.getHire_date());
+        employee.setSalary(request.getSalary());
+        employee.setPhone(request.getPhone());
     }
 
 
@@ -284,23 +379,4 @@ public class EmployeeController{
         httpHeaders.setContentType(MediaType.parseMediaType(contentType));
         return ResponseEntity.ok().headers(httpHeaders).body(res);
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

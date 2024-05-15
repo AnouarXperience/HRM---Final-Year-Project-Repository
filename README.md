@@ -14,7 +14,7 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 Before running the project, make sure to install the necessary dependencies. Run `npm install` to install all the required packages, including the ones located in the `node_modules` folder.
 
-Additionally, ensure that you export the `vendor.rar` compressed file into the `assets` folder located in the current directory.
+
 
 ## Further help
 

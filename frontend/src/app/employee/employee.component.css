@@ -52,4 +52,51 @@ th.col-text, td.col-text {
 }
 
 
+input[type="search"]::-ms-clear {
+  display: none;
+}
 
+/* Remove the clear button in Chrome */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+
+/* Safari: Remove the inner and outer clear buttons */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.hide {
+  display: none;
+}
+
+
+.search-bar input.form-control {
+  padding-left: 30px;  /* Adjust this based on the size of your search icon */
+  padding-right: 30px; /* Adjust this based on the size of your clear icon */
+}
+#searchInput{
+  border-width: 2px; /* Adjust as needed for thickness */
+  border-style: solid; /* Ensuring the border style is solid */
+  border-color: #808080; /* You can customize the color as needed */
+}
+input.form-control {
+  /* Adding a box shadow */
+  box-shadow: 0 2px 5px #C0C0C0; /* Adjust the rgba values based on your color preference */
+
+  /* Optional: on focus to change the shadow as well */
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+input.form-control:focus {
+  /* Enhanced shadow on focus, if needed */
+  box-shadow: 0 4px 8px #C0C0C0; /* Stronger shadow on focus */
+}
+
+.custom-search-input {
+  height: 48px;
+
+}

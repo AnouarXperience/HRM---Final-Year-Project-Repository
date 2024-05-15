@@ -6,6 +6,12 @@ import { debounceTime, first } from 'rxjs';
 import { EmployeeService } from 'src/app/sevices/employee.service';
 import Swal from 'sweetalert2';
 
+export class Role {
+  id: number;
+  name: string;
+}
+
+
 @Component({
   selector: 'app-addemployee',
   templateUrl: './addemployee.component.html',
@@ -16,6 +22,7 @@ export class AddemployeeComponent implements OnInit {
   selectedFile: File = null; // Initialize to null for clarity
   isLoading: boolean = false; // Add isLoading property
   imageUrl: string | ArrayBuffer = 'assets/img/userimg.png'; // Default image
+  roles: Role[] = []; // Pour stocker les rôles récupérés
 
   constructor(private employeeService: EmployeeService,
               private formBuilder: FormBuilder,
@@ -36,25 +43,27 @@ export class AddemployeeComponent implements OnInit {
       salary: ['', Validators.required],
       id_card: ['', Validators.required],
       phone: ['', Validators.required],
+      role: ['Employee', Validators.required],
     });
     this.form.get('firstname').valueChanges.subscribe(() => this.updateUsername());
     this.form.get('lastname').valueChanges.subscribe(() => this.updateUsername());
     this.form.get('id_card').valueChanges.subscribe(() => this.updateUsername());
+    this.loadRoles();
   }
   updateUsername() {
     const firstname = this.form.get('firstname').value;
     const lastname = this.form.get('lastname').value;
     const id_card = this.form.get('id_card').value;
-    console.log('Firstname:', firstname); // Debugging
-    console.log('Lastname:', lastname); // Debugging
-    console.log('ID Card:', id_card); // Debugging
+    // console.log('Firstname:', firstname); // Debugging
+    // console.log('Lastname:', lastname); // Debugging
+    // console.log('ID Card:', id_card); // Debugging
 
     if (firstname && lastname && id_card) {
         const username = `DIGID${firstname.substr(0, 2).toUpperCase()}${lastname.substr(0, 2).toUpperCase()}${id_card.substr(id_card.length - 3).toUpperCase()}`;
         this.form.get('username').setValue(username);
-        console.log('Username set to:', username);
+        // console.log('Username set to:', username);
     } else {
-        console.log('One or more required fields are empty.');
+        // console.log('One or more required fields are empty.');
     }
 }
 
@@ -84,6 +93,17 @@ isUsernameDisabled: boolean = true;
     // Ou, pour simplement réinitialiser le formulaire à un état vide sans valeurs par défaut
     // this.form.reset();
   }
+
+  loadRoles() {
+    this.employeeService.getAllroles().subscribe({
+      next: (roles) => {
+        this.roles = roles.filter(role => role.name !== 'Administrateur');
+      },
+      error: (error) => console.error('Failed to load roles:', error)
+    });
+  }
+
+
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
@@ -119,8 +139,8 @@ isUsernameDisabled: boolean = true;
       }).then((result) => {
         if (result.isConfirmed) {
           this.isLoading = true; // Show loader
-          console.log('Form data:', this.form.value);
-          console.log('Selected file:', this.selectedFile);
+          // console.log('Form data:', this.form.value);
+          // console.log('Selected file:', this.selectedFile);
 
           // First check the username
           this.employeeService.checkUsernameExists(this.form.value.username).subscribe(usernameExists => {
@@ -137,7 +157,7 @@ isUsernameDisabled: boolean = true;
                   // Proceed with registration if both checks pass
                   this.employeeService.signupEmployee(this.form.value, this.selectedFile).subscribe({
                     next: (response: any) => {
-                      console.log('Server response:', response);
+                      // console.log('Server response:', response);
                       Swal.fire('Successful Registration !');
                       this.router.navigate(['/home/listemployee']);
                     },
@@ -156,7 +176,7 @@ isUsernameDisabled: boolean = true;
         }
       });
     } else {
-      console.log('Form is invalid or no file selected');
+      // console.log('Form is invalid or no file selected');
       Swal.fire('Attention', 'Please fill in all required fields and select a profile image.', 'warning');
     }
   }
