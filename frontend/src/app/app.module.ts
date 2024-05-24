@@ -29,6 +29,10 @@ import { TokenExpirationService } from './sevices/token-expiration.service';
 import { RechercheEmployeePipe } from './pipes/recherche-employee.pipe';
 import { CommonModule } from '@angular/common';
 import { DetailsComponent } from './employee/details/details.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
+import { MatIconModule } from '@angular/material/icon';
+import { EspaceCandidatComponent } from './companets/acceuil/espace-candidat/espace-candidat.component';
 
 
 
@@ -54,7 +58,9 @@ import { DetailsComponent } from './employee/details/details.component';
     DetailsComponent,
     LoaderComponent,
     ProfileComponent,
-    RechercheEmployeePipe
+    RechercheEmployeePipe,
+    ScrollToTopComponent,
+    EspaceCandidatComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +71,10 @@ import { DetailsComponent } from './employee/details/details.component';
     NgbModule,
     NgxPaginationModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    BrowserAnimationsModule,
+    MatIconModule,  // Add this line
+
   ],
   providers: [   AuthGuard,
     {

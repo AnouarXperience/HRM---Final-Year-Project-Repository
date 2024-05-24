@@ -1,11 +1,26 @@
-#custom-icon {
-  background-color: transparent; /* Remove any background */
-  border: none; /* Remove border */
-  font-size: 250%; /* Adjust the size of the icon */
-  margin-left: 3px;
-  color: black; /* Change the icon color */
-
+#custom-button {
+  background-color: #DC143C; /* Background color red for the button */
+  color: white; /* Text color white for better contrast */
+  border: none; /* Remove default button border */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px; /* Padding for better spacing */
+  text-decoration: none; /* Remove underline from link styling */
+  margin-top: -20px;
 }
+
+#custom-button .custom-icon {
+  margin-right: 5px; /* Space between the icon and the text */
+  font-size: 1em; /* Adjust icon size if needed */
+}
+
+#custom-button span {
+  text-align: center;
+  color: white; /* Text color white */
+  text-decoration: none; /* Ensure the text is not underlined */
+}
+
 
 /* Centrer les contrôles de pagination */
 .pagination-controls {
@@ -18,13 +33,15 @@
 }
 
 .row {
-  width: fit-content; /* Permet le défilement horizontal si le tableau est trop large */
+  width: 100%; /* Permet le défilement horizontal si le tableau est trop large */
 }
 
 
 table {
   width: 100%;
   table-layout: relative; /* Cela force le tableau à respecter les largeurs de colonne spécifiées */
+
+
 }
 
 th, td {
@@ -43,7 +60,7 @@ th.col-text, td.col-text {
 }
 
 .btn {
-  margin: 2px;
+  margin: 3px;
 }
 
 /* Assurez-vous que les boutons sont toujours visibles */
@@ -100,3 +117,95 @@ input.form-control:focus {
   height: 48px;
 
 }
+/* Additional styles for employee component */
+body main#main.employee-main {
+  padding-bottom: 290px ; /* Adjust this value based on the actual height of your footer */
+}
+
+@media (max-width: 768px) {
+  .main.employee-main {
+      padding-bottom: 100px; /* Larger padding for smaller screens if needed */
+  }
+}
+.employee-image {
+  width: 65px; /* Set the desired width */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 45%; /* Optional: make the image circular */
+  display: block; /* Ensures the image is displayed as a block element */
+  margin: auto; /* Center the image within the table cell */
+}
+
+.table-header th {
+
+  background-color: #DCDCDC !important; /* Set background color to gray */
+  padding: 15px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: red;
+  transition: .4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+}
+
+.status-text {
+  position: absolute;
+  font-size: 0.8rem;
+  width: 100%;
+  text-align: center;
+  z-index: 1;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  z-index: 2;
+}
+
+input:checked + .slider {
+  background-color: green;
+}
+
+input:checked + .slider:before {
+  transform: translateX(67px); /* Adjust this value based on the width */
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 100%;
+  width: 20px;
+  height: 25px;
+}
+
+

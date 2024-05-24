@@ -21,6 +21,7 @@ import com.securityModel.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -86,32 +87,68 @@ public class AuthController {
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-    Authentication authentication = authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-    Optional<User> user=userRepository.findByUsername(loginRequest.getUsername());
-    if(user.get().isConfirme()==true ){
-
-
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-
-      UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-      String jwt = jwtUtils.generateJwtToken(userDetails);
-
-      List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-              .collect(Collectors.toList());
-
-      RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-
-      return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-              userDetails.getUsername(), userDetails.getEmail(), roles));
-    }else {
-      throw new RuntimeException("user not confirmed");
+    // Validate the login request to ensure either username or email is provided
+    if ((loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty()) &&
+            (loginRequest.getEmail() == null || loginRequest.getEmail().isEmpty())) {
+      return ResponseEntity.badRequest().body("Username or email must be provided");
     }
 
+    String loginIdentifier = (loginRequest.getUsername() != null && !loginRequest.getUsername().isEmpty()) ?
+            loginRequest.getUsername() : loginRequest.getEmail();
+
+    // Attempt to authenticate using identifier (username or email) and password
+    Authentication authentication = authenticationManager
+            .authenticate(new UsernamePasswordAuthenticationToken(loginIdentifier, loginRequest.getPassword()));
+
+    // Find user by username or email
+    Optional<User> user = userRepository.findByUsernameOrEmail(loginRequest.getUsername(), loginRequest.getEmail());
+
+    if (user.isPresent()) {
+      User currentUser = user.get();
+
+      // Check if the user is confirmed and active
+      if (currentUser.isConfirme() && currentUser.isStatus()) {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String jwt = jwtUtils.generateJwtToken(userDetails);
+
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
+                userDetails.getUsername(), userDetails.getEmail(), roles));
+      } else if (!currentUser.isConfirme()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not confirmed");
+      } else if (!currentUser.isStatus()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User status is inactive");
+      }
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login attempt");
   }
+
+  // In your UserRepository, add the following method
+
+
+
+  // In your UserRepository, add the following method
+
+
+  // In your UserRepository, add the following method
+
+
+
+
+
+
+
 
   /* @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {

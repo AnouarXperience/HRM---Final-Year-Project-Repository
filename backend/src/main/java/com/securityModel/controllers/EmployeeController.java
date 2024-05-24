@@ -131,52 +131,6 @@ public class EmployeeController{
     }
 
 
-//   @PostMapping("/signup")
-//    public ResponseEntity<?> registerUser(@ModelAttribute SignupRequest signUpRequest, @RequestParam("file") MultipartFile file) throws MessagingException {
-//        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-//            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
-//        }
-//
-//        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-//            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
-//        }
-//       String fileName;
-//       try {
-//           fileName = storgeService.store(file);
-//
-//       } catch (Exception e) {
-//           return ResponseEntity.badRequest().body(new MessageResponse("Error: File upload failed!"));
-//       }
-//        // Create new user's account
-//        Employee employee = new Employee(signUpRequest.getUsername(), signUpRequest.getEmail(),
-//                encoder.encode(signUpRequest.getPassword()),signUpRequest.setImage(fileName),signUpRequest.getNom(), signUpRequest.getPrenom(), signUpRequest.getMatricule(), signUpRequest.getDepartment(),
-//                signUpRequest.getDesignation(), signUpRequest.getDate_naiss(), signUpRequest.getPost(),  signUpRequest.getDate_embuche() != null ? signUpRequest.getDate_embuche() : LocalDateTime.now(),
-//                signUpRequest.getSalary(), signUpRequest.getCin(), signUpRequest.getPhone());
-//
-//        Set<String> strRoles = signUpRequest.getRole();
-//        Set<Role> roles = new HashSet<>();
-//        Role modRole = roleRepository.findByName(ERole.ROLE_Employee)
-//                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//        roles.add(modRole);
-//        employee.setRoles(roles);
-//        employeeService.create(employee);
-//       // mail confirmation
-//       //user.setConfirm(false);
-//       String from ="admin@gmail.com" ;
-//       String to = signUpRequest.getEmail();
-//       MimeMessage message = javaMailSender.createMimeMessage();
-//       MimeMessageHelper helper = new MimeMessageHelper(message);
-//       helper.setSubject("Confirmation Registration!");
-//       helper.setFrom(from);
-//       helper.setTo(to);
-//       helper.setText("<HTML><body> <a href=\"http://localhost:8086/users/confirme?email="
-//               +signUpRequest.getEmail()+"\">VERIFY</a></body></HTML>",true);
-//
-//       javaMailSender.send(message);
-//
-//        return ResponseEntity.ok(new MessageResponse("Employee registered successfully!,verife votre email for confirme"));
-//    }
-
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@ModelAttribute SignupRequest signUpRequest, @RequestParam("file") MultipartFile file) throws MessagingException {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -260,8 +214,8 @@ public class EmployeeController{
         helper.setText("<HTML><BODY>" +
                 "<H2>Welcome to DIGID! We're thrilled to have you join our family.!</H2>" +
                 "<p>Here are your login details:</p>" +
-                "<ul><li>Username: " + signUpRequest.getUsername() + "</li>" +
-                "<li>Temporary password: " + tempPassword + "</li></ul>" +
+                "<ul><li>Registration Number: " + signUpRequest.getUsername() + "</li>" +
+                "<li>password: " + tempPassword + "</li></ul>" +
                 "<p>Please click the link below to verify your email and complete your registration:</p>" +
                 "<a href=\"http://localhost:8086/users/confirme?email=" + signUpRequest.getEmail() + "\">Verify Your Account</a></BODY></HTML>", true);
         javaMailSender.send(message);
@@ -282,56 +236,11 @@ public class EmployeeController{
             String fileName;
             try {
                 fileName = storgeService.store(file);
-                existingEmployee.setImage(fileName); // Met à jour l'image uniquement si un fichier est fourni
+                existingEmployee.setImage(fileName);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(new MessageResponse("Error: File upload failed!"));
             }
         }
-
-
-        // Extract roles from the request
-//        Set<String> strRoles = updateRequest.getRole();
-//        Set<Role> roles = new HashSet<>();
-//
-//        if (strRoles != null) {
-//            roles = strRoles.stream()
-//                    .map(role -> {
-//                        switch (role) {
-//                            case "ROLE_Employee":
-//                                return roleRepository.findByName(ERole.ROLE_Employee)
-//                                        .orElseThrow(() -> new RuntimeException("Error: Role not found."));
-//                            case "ROLE_Responsable":
-//                                return roleRepository.findByName(ERole.ROLE_Responsable)
-//                                        .orElseThrow(() -> new RuntimeException("Error: Role not found."));
-//                            case "ROLE_Administrateur":
-//                                return roleRepository.findByName(ERole.ROLE_Administrateur)
-//                                        .orElseThrow(() -> new RuntimeException("Error: Role not found."));
-//                            default:
-//                                throw new RuntimeException("Error: Invalid role provided.");
-//                        }
-//                    })
-//                    .collect(Collectors.toSet());
-//        }
-
-//        // Extract roles from the request Second Method
-//        Set<String> strRoles = updateRequest.getRole();
-//        Set<Role> roles = new HashSet<>();
-
-//        if (strRoles != null) {
-//            strRoles.forEach(role -> {
-//                Role selectedRole = roleRepository.findByName(ERole.valueOf(role))
-//                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                roles.add(selectedRole);
-//            });
-//        }
-//
-//        // Assign roles to the employee
-//        existingEmployee.setRoles(roles);
-
-
-
-
-        // Extract and set roles from the request
         if (updateRequest.getRole() != null) {
             Set<Role> roles = updateRequest.getRole().stream()
                     .map(roleName -> roleRepository.findByName(ERole.valueOf(roleName))

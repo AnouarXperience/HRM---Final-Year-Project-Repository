@@ -27,9 +27,11 @@ export class UserAuthService {
     return localStorage.getItem('jwtToken');
   }
 
+
   public clear(): void {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('roles');
+    localStorage.removeItem('username');
     this.loggedIn.next(false);
   }
 
@@ -39,5 +41,10 @@ export class UserAuthService {
 
   public getLoggedInObservable() {
     return this.loggedIn.asObservable();
+  }
+
+  public isAdmin(): boolean {
+    const roles = this.getRoles();
+    return roles.includes('Administrateur');
   }
 }

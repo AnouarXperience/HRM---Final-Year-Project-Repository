@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { EmployeeService } from '../sevices/employee.service';
 import Swal from 'sweetalert2';
 import { UserService } from '../sevices/user.service';
@@ -7,7 +7,8 @@ import { UserService } from '../sevices/user.service';
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.css']
+  styleUrls: ['./employee.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EmployeeComponent implements OnInit {
 
@@ -15,11 +16,13 @@ export class EmployeeComponent implements OnInit {
   e:number=1
   search: string = '';
   isInputFocused = false;
+  imageUrl: string | ArrayBuffer = '';
 
   constructor(private service: EmployeeService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.allemployee(); // Correction ici: Ajoutez les parenthèses pour appeler la méthode.
+
   }
 
   allemployee() {
@@ -75,4 +78,14 @@ clearSearch(): void {
   this.search = '';  // Clears the search input
   this.updateSearch();  // Optionally update list or icons
 }
+toggleStatus(employee: any) {
+  employee.status = !employee.status;
+  this.service.updateUserStatus(employee.id, employee.status)
+    .subscribe(response => {
+      console.log('Status updated', response);
+    }, error => {
+      console.error('Error updating status', error);
+    });
+}
+
 }

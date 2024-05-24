@@ -91,6 +91,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 			.requestMatchers("/users/**").permitAll()
 			.requestMatchers("/employee/**").permitAll()
 			.requestMatchers("/responsable/**").permitAll()
+			.requestMatchers("/administrateur/**").permitAll()
 
 
 			.anyRequest().authenticated();

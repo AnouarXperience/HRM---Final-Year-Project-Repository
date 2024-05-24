@@ -58,6 +58,14 @@ public class UserController {
         return userService.getbyId(id);
     }
 
+    @GetMapping("/username/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        return userService.findByUsername(username)
+                .map(user -> ResponseEntity.ok(user))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
     @PutMapping("/updateu/{idc}")
     public User updateUser(@PathVariable Long idc, @RequestBody User u) {
         u.setId(idc);
@@ -75,6 +83,19 @@ public class UserController {
         } catch (Exception e) {
             message.put("etat", "Error");
             return message;
+        }
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateUserStatus(@PathVariable Long id, @RequestBody Map<String, Boolean> status) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setStatus(status.get("status"));
+            userRepository.save(user);
+            return ResponseEntity.ok("User status updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
 
@@ -169,27 +190,22 @@ public class UserController {
         return userRepository.findByUsername(request.getUsername())
                 .map(user -> {
                     if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-                        System.out.println("Current password is incorrect.");
-                        ErrorModel errorModel = new ErrorModel("current password", "Current password is incorrect.");
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorModel);
-
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(new ErrorModel("current password", "Current password is incorrect."));
                     }
                     if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
-                        System.out.println("New password must be different from the current password.");
-                        ErrorModel errorModel = new ErrorModel("Invalid password", "New password must be different from the current password.");
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorModel);
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(new ErrorModel("Invalid password", "New password must be different from the current password."));
                     }
                     user.setPassword(passwordEncoder.encode(request.getNewPassword()));
                     userRepository.save(user);
                     return ResponseEntity.ok(Collections.singletonMap("message", "Password successfully updated."));
                 })
-                .orElseGet(() -> {
-                    System.out.println("User not found.");
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                            Collections.singletonMap("message", "User not found.")
-                    );
-                });
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Collections.singletonMap("message", "User not found.")));
     }
+
+
 
 
 

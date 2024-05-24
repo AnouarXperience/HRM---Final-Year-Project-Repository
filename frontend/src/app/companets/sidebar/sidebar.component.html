@@ -1,22 +1,22 @@
 <aside id="sidebar" class="sidebar" [ngClass]="{'sidebar-icon-only': !isSidebarExpanded}">
   <ul class="sidebar-nav" id="sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link" (click)="toggleSidebar()">
-        <i class="bi bi-list"></i>
+      <a class="nav-link collapsed" (click)="toggleSidebar()">
+        <i class="bi bi-list" style="font-size: 20px;"></i>
         <span>Menu</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" routerLink="/home" routerLinkActive="active">
-        <i class="bi bi-house"></i>
+      <a class="nav-link collapsed" routerLink="/home" routerLinkActive="active">
+        <i class="bi bi-house" style="font-size: 20px;"></i>
         <span>Home</span>
       </a>
     </li>
     <!-- End Dashboard Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" routerLink="/home/profile">
-        <i class="bi bi-person"></i>
+      <a class="nav-link collapsed" [routerLink]="['/home/profile', profile?.id]">
+        <i class="bi bi-person" style="font-size: 20px;"></i>
         <span>Profile</span>
       </a>
     </li>
@@ -24,7 +24,7 @@
 
     <li class="nav-item" *ngIf="userService.roleMatch(['Administrateur','Responsable'])">
       <a class="nav-link collapsed always-visible" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>Users</span>
+        <i class="bi bi-menu-button-wide" style="font-size: 20px;"></i><span>Users</span>
         <i class="bi bi-chevron-down ms-auto hide-in-icon-only"></i>
       </a>
       <ul
@@ -32,9 +32,14 @@
         class="nav-content collapse"
         data-bs-parent="#sidebar-nav"
       >
+      <li>
+        <a routerLink="/home/addemployee">
+          <i class="bi bi-person-plus" style="font-size: 20px;"></i><span>New Employee</span>
+        </a>
+      </li>
         <li>
           <a routerLink="/home/listemployee">
-            <i class="bi bi-circle"></i><span>Employees List</span>
+            <i class="bi bi-people" style="font-size: 20px;"></i><span>Employees List</span>
           </a>
         </li>
       </ul>

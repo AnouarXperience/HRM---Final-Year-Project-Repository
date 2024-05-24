@@ -37,6 +37,8 @@ public abstract class User {
 	private String image;
 
 	private boolean confirme = false;
+
+	private boolean status = true;
 	private String passwordResetToken;
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -111,4 +113,12 @@ public abstract class User {
 	public String getImage() {return image;}
 
 	public void setImage(String image) { this.image = image;}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 }

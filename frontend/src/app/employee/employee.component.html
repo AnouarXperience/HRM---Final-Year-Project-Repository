@@ -1,5 +1,5 @@
 <!-- <main id="main" class="main" *ngIf="UserService.roleMatch(['Administrateur'])"> -->
-  <main id="main" class="main">
+  <main id="main" class="main employee-main">
 
     <div class="pagetitle">
       <h1>Data Tables</h1>
@@ -11,11 +11,11 @@
         </ol>
       </nav>
     </div><!-- End Page Title -->
-  
+
     <section class="section">
       <div class="row">
         <div class="col-lg-12">
-  
+
           <div class="card">
             <div class="card-body">
               <div class="d-flex justify-content-end align-items-center mt-2">
@@ -29,54 +29,82 @@
                        [ngClass]="{'d-none': search.length === 0}" (click)="clearSearch()"></i>
                 </div>
             </div>
-  
-  
-  
+
+
+
               <!-- Bouton pour ajouter un employé -->
               <div class="mb-3">
-                <button class="btn btn-link" [routerLink]="['/home/addemployee']" title="ADD Employee" id="custom-button">
-                  <i class="bi bi-person-plus-fill" id="custom-icon"></i>
-              </button>
-  
+                <button class="btn btn-link custom-button" [routerLink]="['/home/addemployee']" title="ADD Employee" id="custom-button">
+                  <i class="bi bi-plus-circle-fill custom-icon"></i>
+                  <span>Add Employee</span>
+                </button>
+
+
+
+
               </div>
-  
+
               <!-- Table with stripped rows -->
               <table class="table datatable">
                 <thead>
-                  <tr>
+                  <tr class="table-header">
                     <th scope="col" class="col-text">#</th>
+                    <th scope="col" class="col-text">Image</th>
                     <th scope="col" class="col-text">Full Name</th>
                     <th scope="col" class="col-text">Registration Number</th>
                     <th scope="col" class="col-text">Department</th>
                     <th scope="col" class="col-text">Job</th>
-                    <th scope="col" class="col-text">Email</th>
+                    <th scope="col" class="col-text">Phone</th>
+                    <th scope="col" class="col-text">Status</th>
                     <th scope="col" class="col-action">ACTION</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let e of listemployee | rechercheEmployee:search | paginate: { itemsPerPage: 5, currentPage: e  }; let i = index">
                     <th scope="row" class="col-text">{{i+1}}</th>
+                    <td class="col-text">
+                      <img src="http://localhost:8086/employee/files/{{e.image}}" alt="{{e.firstname}} {{e.lastname}}" class="employee-image">
+                    </td>
                     <td class="col-text">{{e.firstname}} {{e.lastname}}</td>
                     <td class="col-text">{{e.username}}</td>
                     <td class="col-text">{{e.department}}</td>
                     <td class="col-text">{{e.job}}</td>
-                    <td class="col-text">{{e.email}}</td>
+                    <td class="col-text">{{e.phone}}</td>
+                    <td class="col-text">
+                      <label class="switch">
+                        <input type="checkbox" [checked]="e.status" (change)="toggleStatus(e)">
+                        <span class="slider round">
+                          <span class="status-text">{{ e.status ? 'Enable' : 'Disabled' }}</span>
+                        </span>
+                      </label>
+                    </td>
                     <td class="col-action">
-                      <button class="btn btn-info" aria-label="View details"><i class="bi bi-eye"  [routerLink]="['/home/detailsemployee', e.id]"></i></button>
-                      <button class="btn btn-warning" aria-label="Edit" [routerLink]="['/home/editemployee', e.id]"><i class="bi bi-pencil"></i></button>
-                      <button class="btn btn-danger" aria-label="Delete" (click)="deleteemployee(e.id)"><i class="bi bi-trash"></i></button>
+                      <button class="btn btn-info" aria-label="View details" style="background: none; border: none; padding: 0;margin-top: -5px;">
+                        <i class="ri-file-text-fill" [routerLink]="['/home/detailsemployee', e.id]" style="color: #5b6e7a; font-size: 30px;"></i>
+                    </button>
+
+
+
+                    <button class="btn btn-warning" aria-label="Edit" [routerLink]="['/home/editemployee', e.id]" style="background: none; border: none; padding: 0;margin-top: -5px;">
+                      <i class="bi bi-pencil-fill" style="color: 	orange; font-size: 25px;"></i>
+                  </button>
+
+                  <button class="btn btn-danger" aria-label="Delete" (click)="deleteemployee(e.id)" style="background: none; border: none; padding: 0;margin-top: -5px;">
+                    <i class="bi bi-trash-fill" style="color: red; font-size: 25px;"></i>
+                </button>
+
                     </td>
                   </tr>
                 </tbody>
-  
+
               </table>
               <pagination-controls class="pagination-controls"  (pageChange)="e = $event"></pagination-controls>
               <!-- End Table with stripped rows -->
-  
+
             </div>
           </div>
-  
+
         </div>
       </div>
     </section>
-  </main><!-- End #main -->  
+  </main><!-- End #main -->

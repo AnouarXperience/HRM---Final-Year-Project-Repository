@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/sevices/user.service';
+import { UserProfile, UserService } from 'src/app/sevices/user.service';
 import { UserAuthService } from 'src/app/sevices/user-auth.service';
 
 @Component({
@@ -9,7 +9,9 @@ import { UserAuthService } from 'src/app/sevices/user-auth.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-
+  profile: UserProfile | null = null;
+  error: string | null = null;
+  imageUrl: string = '';
 
   constructor(
     private userAuthService: UserAuthService,
@@ -18,8 +20,13 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-
+    this.userService.getUserProfile().subscribe({
+      next: (profile) => {
+        this.profile = profile;
+        this.imageUrl = profile.image ? `http://localhost:8086/employee/files/${profile.image}` : '';
+      },
+      error: (err) => this.error = 'Failed to load user profile'
+    });
   }
   isOpen: boolean = false;
 
@@ -38,4 +45,6 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/login']); // Navigate to the login page
     });
   }
+
+
 }
