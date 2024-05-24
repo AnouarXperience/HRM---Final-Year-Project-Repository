@@ -1,4 +1,6 @@
-import { Color } from "../types";
+
+import { Color } from '@kurkle/color';
+
 export declare function isPatternOrGradient(value: unknown): value is CanvasPattern | CanvasGradient;
 export declare function color(value: CanvasGradient): CanvasGradient;
 export declare function color(value: CanvasPattern): CanvasPattern;

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Role } from '../employee/addemployee/addemployee.component';
+import { UserProfile } from './user.service';
 
 
 @Injectable({
@@ -10,7 +11,9 @@ import { Role } from '../employee/addemployee/addemployee.component';
 })
 export class EmployeeService {
 
+
   constructor(private http:HttpClient) { }
+
 
   getallemployee(){
     return this.http.get(`${environment.baseurl}/employee/all`);
@@ -71,4 +74,16 @@ export class EmployeeService {
   checkEmailExists(email: string): Observable<boolean> {
     return this.http.get<boolean>(`${environment.baseurl}/employee/exists/email/${email}`);
   }
+
+  updateUserStatus(id: number, status: boolean): Observable<any> {
+    return this.http.put(`${environment.baseurl}/users/${id}/status`, { status: status });
+  }
+
+
+
+
+
+
+
+
   }

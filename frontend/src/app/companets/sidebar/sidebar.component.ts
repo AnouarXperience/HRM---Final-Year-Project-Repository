@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from 'src/app/sevices/user.service';
+import { UserProfile, UserService } from 'src/app/sevices/user.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -7,7 +7,10 @@ import { UserService } from 'src/app/sevices/user.service';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
+  profile: UserProfile | null = null;
   isSidebarExpanded = true;
+  imageUrl: string = '';
+  error: string | null = null;
 
   toggleSidebar(): void {
     this.isSidebarExpanded = !this.isSidebarExpanded;
@@ -16,6 +19,13 @@ export class SidebarComponent implements OnInit {
   constructor(public userService: UserService) { }
 
   ngOnInit(): void {
+    this.userService.getUserProfile().subscribe({
+      next: (profile) => {
+        this.profile = profile;
+        this.imageUrl = profile.image ? `http://localhost:8086/employee/files/${profile.image}` : '';
+      },
+      error: (err) => this.error = 'Failed to load user profile'
+    });
   }
 
 }

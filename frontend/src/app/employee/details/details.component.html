@@ -37,7 +37,7 @@
               <div class="tab-pane fade show active profile-overview" id="profile-overview">
 
 
-                <h5 class="card-title">Profile Details</h5>
+                <h2 class="card-title text-center">Profile Details</h2>
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label ">Registration Number</div>
                   <div class="col-lg-9 col-md-8">{{ oneemployee?.username }}</div>
@@ -106,7 +106,10 @@
 
 
 
-                <button (click)="downloadProfile()" class="btn btn-primary mt-3">Download Profile Details</button>
+                <button (click)="downloadProfile()" class="btn btn-primary mt-3">
+                  <i class="bi bi-file-earmark-pdf-fill" style="color: white; font-size: 25px;"></i> Download
+                </button>
+
 
               </div>
 

@@ -30,15 +30,17 @@
     height: 29rem;
 }
 
+
+
 /* ul {
-   
-    margin: 2rem 0; 
-    padding: 0; 
+
+    margin: 2rem 0;
+    padding: 0;
   }
 
   li {
     list-style-type: style circle;
-    font-size: 1.2rem; 
+    font-size: 1.2rem;
     margin-bottom: 0.5rem; Margin using rem units for spacing
   } */
 
@@ -62,7 +64,6 @@
 section {
     position: relative;
     width: 100%;
-
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -246,12 +247,7 @@ html {
 .nav-item{color:white;
     margin-left: 2.5rem ;
     font-size: 1rem;
-    
-}
 
-.nav-link{
-    font-size: medium;
-    font-size: 1.5rem;
 }
 
 
@@ -262,6 +258,36 @@ html {
     top: 0;
     z-index: 100;
     font-size: 3rem;
+    height: 110px; /* Set the desired height of the navbar */
+
+}
+
+#logo {
+  max-width: 55px;
+  max-height: 55px;
+  filter: invert(1) brightness(2) contrast(2); /* Makes the image white */
+  margin-right: 25px; /* Adds space between the logo and the Home link */
+}
+
+.logo-link {
+  display: inline-block;
+  cursor: pointer; /* Change cursor to pointer when hovering over the logo */
+}
+
+.navbar-nav {
+  align-items: center; /* Vertically align the logo and links */
+}
+
+.nav-link {
+  color: white; /* Default link color */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+  font-size: medium;
+  font-size: 1.5rem;
+}
+
+
+.nav-link:hover {
+  color: #9a9a1d; /* Color when the link is active or hovered over */
 }
 
 

@@ -1,0 +1,89 @@
+<section className="nav">
+  <nav class="navbar navbar-expand-sm border-bottom border-body" data-bs-theme="dark">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a routerLink="/acceuil" class="logo-link">
+          <img src="assets/img/Picture1.png" alt="DIGID" id="logo">
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/acceuil" routerLinkActive="active" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/candidat" routerLinkActive="active" class="nav-link">Espace candidat</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item" style="margin-right: 4rem;">
+        <a *ngIf="!isLoggedIn()" routerLink="/login" routerLinkActive="active" class="nav-link">Login</a>
+        <a *ngIf="isLoggedIn()" routerLink="/home" routerLinkActive="active" class="nav-link">Dashboard</a>
+      </li>
+    </ul>
+  </nav>
+</section>
+
+<div class="main-content">
+  <div class="form-container">
+    <div class="form-section civility">
+      <h2>Civility</h2>
+      <form>
+        <label for="firstName">First name</label>
+        <input type="text" id="firstName" name="firstName" />
+
+        <label for="lastName">Last name</label>
+        <input type="text" id="lastName" name="lastName" />
+
+        <label for="dateOfBirth">Date of birth</label>
+        <input type="text" id="dateOfBirth" name="dateOfBirth" placeholder="jj/mm/aaaa" />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" />
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" />
+
+        <label for="cv">CV</label>
+        <input type="file" id="cv" name="cv" />
+
+        <label for="coverLetter">Cover letter</label>
+        <input type="file" id="coverLetter" name="coverLetter" />
+      </form>
+    </div>
+
+    <div class="right-sections">
+      <div class="form-section">
+        <h2>Study level</h2>
+        <form>
+          <label for="level">Level</label>
+          <input type="text" id="level" name="level" />
+
+          <label for="diplomaTitle">Diploma title</label>
+          <input type="text" id="diplomaTitle" name="diplomaTitle" />
+
+          <label for="engineeringSchool">Engineering school</label>
+          <input type="text" id="engineeringSchool" name="engineeringSchool" />
+        </form>
+      </div>
+
+      <div class="form-section">
+        <h2>Experience</h2>
+        <form>
+          <label for="yearsExperience">Years experience</label>
+          <input type="number" id="yearsExperience" name="yearsExperience" />
+
+          <label for="yourExperiences">Your experiences</label>
+          <textarea id="yourExperiences" name="yourExperiences"></textarea>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="button-container">
+    <button class="submit-btn" type="button">Submit</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <span>© 2024 DIGID. All rights reserved.</span>
+  </div>
+</footer>

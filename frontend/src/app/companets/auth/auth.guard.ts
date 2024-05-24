@@ -30,10 +30,10 @@ export class AuthGuard implements CanActivate {
           alert("You do not have permission to access this resource.");
           this.router.navigate(['/login']);
           return false;
-        }     
+        }
       }
     }
     this.router.navigate(['/login']);
     return false;
-  } 
+  }
 }

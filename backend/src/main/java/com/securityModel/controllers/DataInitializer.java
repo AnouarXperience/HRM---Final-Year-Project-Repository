@@ -43,7 +43,7 @@ public class DataInitializer implements CommandLineRunner {
         // Vérifiez si l'administrateur existe déjà
         if (userRepository.findByUsername("admin").isEmpty()) {
             // Si l'administrateur n'existe pas, créez un utilisateur administrateur et enregistrez-le dans la base de données
-            Administrateur adminUser = new Administrateur("admin", "digid.tunis@gmail.com", passwordEncoder.encode("123456789"),"vide");
+            Administrateur adminUser = new Administrateur("admin", "digid.tunis@gmail.com", passwordEncoder.encode("123456789"),"","Foulen","ben foulen","mahdia rue sadaka","administratif","2024-10-03","Administrateur","2024-12-05",1500,"12345678","51458368");
             adminUser.setConfirme(true);
             // Créez une liste de rôles et ajoutez le rôle administrateur à cette liste
             Set<Role> roles = new HashSet<>();

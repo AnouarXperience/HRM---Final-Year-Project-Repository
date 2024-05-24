@@ -1,6 +1,7 @@
 package com.securityModel.service.IMPL;
 
 import com.securityModel.models.Employee;
+import com.securityModel.models.User;
 import com.securityModel.payload.request.UpdateEmployeeRequest;
 import com.securityModel.repository.EmployeeRepository;
 import com.securityModel.repository.RoleRepository;
@@ -46,6 +47,11 @@ public class EmployeeServiceIMPL implements EmployeeService {
     @Override
     public void delete(Long id) {
         employeeRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return Optional.empty();
     }
 
 

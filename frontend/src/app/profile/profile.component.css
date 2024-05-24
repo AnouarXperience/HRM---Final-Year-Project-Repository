@@ -1,0 +1,4 @@
+/* Additional styles for employee component */
+body main#main.profile-main {
+  padding-bottom: 230px ; /* Adjust this value based on the actual height of your footer */
+}
