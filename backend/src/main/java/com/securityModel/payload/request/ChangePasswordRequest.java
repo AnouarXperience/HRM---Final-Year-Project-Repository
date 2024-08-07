@@ -1,18 +1,17 @@
 package com.securityModel.payload.request;
 
 public class ChangePasswordRequest {
-    private String username;
+    private Long userId;
     private String currentPassword;
     private String newPassword;
 
 
-
-    public String getUsername() {
-        return username;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getCurrentPassword() {

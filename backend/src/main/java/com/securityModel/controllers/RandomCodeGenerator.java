@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class RandomCodeGenerator {
-    private static final int LENGTH = 8;
+    private static final int LENGTH = 6;
     private static final Random RANDOM = new SecureRandom();
 
     public static String generateRandomCode() {

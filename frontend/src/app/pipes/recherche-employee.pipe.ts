@@ -13,7 +13,7 @@ export class RechercheEmployeePipe implements PipeTransform {
 
     return value.filter(item =>
       (item.firstname.toLowerCase() + ' ' + item.lastname.toLowerCase()).includes(term) ||
-      item.username.toLowerCase().includes(term)
+      item.username.toLowerCase().includes(term) 
     );
   }
 

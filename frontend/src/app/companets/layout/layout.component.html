@@ -1,5 +1,5 @@
-<main id="main" class="main">
-  <div class="pagetitle">
+<main id="main" class="main layout-main">
+  <div class="pagetitle" *ngIf="isRoleAllowed(['Administrateur', 'Responsable'])">
     <h1>HR Dashboard</h1>
     <nav>
       <ol class="breadcrumb">
@@ -10,312 +10,48 @@
   </div>
   <!-- End Page Title -->
 
-  <section class="section dashboard">
-    <div class="row">
-      <!-- Left side columns -->
-      <div class="col-lg-8">
-        <div class="row">
-          <!-- Employee Information -->
-          <div class="col-md-6">
-            <div class="card info-card employee-info-card">
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"
-                  ><i class="bi bi-three-dots"></i
-                ></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Department</a></li>
-                  <li><a class="dropdown-item" href="#">Position</a></li>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <h5 class="card-title">Employee Information</h5>
-
-                <div class="d-flex align-items-center">
-                  <div class="employee-avatar">
-                    <img
-                      src="https://source.unsplash.com/100x100/?employee"
-                      alt="Employee Avatar"
-                    />
-                  </div>
-                  <div class="ps-3">
-                    <h6>John Doe</h6>
-                    <span class="text-muted small">HR Manager</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- End Employee Information -->
-
-          <!-- Leave Requests -->
-          <div class="col-md-6">
-            <div class="card info-card leave-requests-card">
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"
-                  ><i class="bi bi-three-dots"></i
-                ></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Pending</a></li>
-                  <li><a class="dropdown-item" href="#">Approved</a></li>
-                  <li><a class="dropdown-item" href="#">Rejected</a></li>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <h5 class="card-title">Leave Requests</h5>
-
-                <ul class="list-group">
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    John Smith
-                    <span class="badge bg-primary rounded-pill">2 days</span>
-                  </li>
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    Alice Johnson
-                    <span class="badge bg-primary rounded-pill">1 day</span>
-                  </li>
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    Robert Williams
-                    <span class="badge bg-primary rounded-pill">3 days</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- End Leave Requests -->
-
-          <!-- Performance Reviews -->
-          <div class="col-md-6">
-            <div class="card info-card performance-reviews-card">
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"
-                  ><i class="bi bi-three-dots"></i
-                ></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Pending</a></li>
-                  <li><a class="dropdown-item" href="#">Completed</a></li>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <h5 class="card-title">Performance Reviews</h5>
-
-                <ul class="list-group">
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    Sarah Adams
-                    <span class="badge bg-primary rounded-pill">Pending</span>
-                  </li>
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    Michael Johnson
-                    <span class="badge bg-primary rounded-pill">Completed</span>
-                  </li>
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    David Williams
-                    <span class="badge bg-primary rounded-pill">Pending</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- End Performance Reviews -->
-          <!-- HR Tasks -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"
-                ><i class="bi bi-three-dots"></i
-              ></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Pending</a></li>
-                <li><a class="dropdown-item" href="#">Completed</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body">
-              <h5 class="card-title">HR Tasks</h5>
-
-              <!-- HR Task Information -->
-              <div class="d-flex align-items-center">
-                <div class="employee-avatar">
-                  <img
-                    src="https://source.unsplash.com/100x100/?hr"
-                    alt="HR Avatar"
-                  />
-                </div>
-                <div class="ps-3">
-                  <h6>Michael Johnson</h6>
-                  <span class="text-muted small">HR Specialist</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- End HR Tasks -->
-
-          <!-- Salary Management -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"
-                ><i class="bi bi-three-dots"></i
-              ></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Monthly</a></li>
-                <li><a class="dropdown-item" href="#">Yearly</a></li>
-              </ul>
-            </div>
-
-            <div class="card-body">
-              <h5 class="card-title">Salary Management</h5>
-
-              <!-- Salary Information -->
-              <div class="d-flex align-items-center">
-                <div class="employee-avatar">
-                  <img
-                    src="https://source.unsplash.com/100x100/?salary"
-                    alt="Salary Avatar"
-                  />
-                </div>
-                <div class="ps-3">
-                  <h6>Emily Williams</h6>
-                  <span class="text-muted small">Payroll Manager</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- End Salary Management -->
+  <section class="section dashboard" *ngIf="isRoleAllowed(['Administrateur', 'Responsable','Recruteur'])">
+    <div class="container">
+      <div class="row">
+        <!-- Gender Chart -->
+        <div class="col-md-4 mb-4">
+          <app-gender-chart></app-gender-chart>
         </div>
-      </div>
-      <!-- End Left side columns -->
+        <!-- End Gender Chart -->
 
-      <!-- Right side columns -->
-      <div class="col-lg-4">
-        <!-- Recent Activity -->
-        <div class="card">
-          <div class="filter">
-            <a class="icon" href="#" data-bs-toggle="dropdown"
-              ><i class="bi bi-three-dots"></i
-            ></a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-              <li class="dropdown-header text-start">
-                <h6>Filter</h6>
-              </li>
-
-              <li><a class="dropdown-item" href="#">Today</a></li>
-              <li><a class="dropdown-item" href="#">This Month</a></li>
-              <li><a class="dropdown-item" href="#">This Year</a></li>
-            </ul>
-          </div>
-
-          <div class="card-body">
-            <h5 class="card-title">Recent Activity <span>| Today</span></h5>
-
-            <div class="activity">
-              <div class="activity-item d-flex">
-                <div class="activite-label">32 min</div>
-                <i
-                  class="bi bi-circle-fill activity-badge text-success align-self-start"
-                ></i>
-                <div class="activity-content">
-                  Quia quae rerum
-                  <a href="#" class="fw-bold text-dark">explicabo officiis</a>
-                  beatae
-                </div>
-              </div>
-              <!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">56 min</div>
-                <i
-                  class="bi bi-circle-fill activity-badge text-danger align-self-start"
-                ></i>
-                <div class="activity-content">
-                  Voluptatem blanditiis blanditiis eveniet
-                </div>
-              </div>
-              <!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">2 hrs</div>
-                <i
-                  class="bi bi-circle-fill activity-badge text-primary align-self-start"
-                ></i>
-                <div class="activity-content">
-                  Voluptates corrupti molestias voluptatem
-                </div>
-              </div>
-              <!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">1 day</div>
-                <i
-                  class="bi bi-circle-fill activity-badge text-info align-self-start"
-                ></i>
-                <div class="activity-content">
-                  Tempore autem saepe
-                  <a href="#" class="fw-bold text-dark">occaecati voluptatem</a>
-                  tempore
-                </div>
-              </div>
-              <!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">2 days</div>
-                <i
-                  class="bi bi-circle-fill activity-badge text-warning align-self-start"
-                ></i>
-                <div class="activity-content">
-                  Est sit eum reiciendis exercitationem
-                </div>
-              </div>
-              <!-- End activity item-->
-
-              <div class="activity-item d-flex">
-                <div class="activite-label">4 weeks</div>
-                <i
-                  class="bi bi-circle-fill activity-badge text-muted align-self-start"
-                ></i>
-                <div class="activity-content">
-                  Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
-                </div>
-              </div>
-              <!-- End activity item-->
-            </div>
-          </div>
+        <!-- Contract Chart -->
+        <div class="col-md-4 mb-4">
+          <app-contract-chart></app-contract-chart>
         </div>
-        <!-- End Recent Activity -->
+        <!-- End Contract Chart -->
+
+        <!-- Status Chart -->
+        <div class="col-md-4 mb-4">
+          <app-status-chart></app-status-chart>
+        </div>
+        <!-- End Status Chart -->
       </div>
-      <!-- End Right side columns -->
+
+      <div class="row">
+        <!-- Employee Per Year Chart -->
+        <div class="col-md-12 mb-4">
+          <app-employee-per-year-chart></app-employee-per-year-chart>
+        </div>
+        <!-- End Employee Per Year Chart -->
+      </div>
     </div>
   </section>
- 
+
+  <section class="container" *ngIf="!isRoleAllowed(['Administrateur', 'Responsable','Recruteur'])">
+    <div class="containe">
+      <main id="main" class="main layout-main">
+        <section class="welcome-section">
+          <div class="welcome-content">
+            <h1>Welcome to Your Team</h1>
+            <p>Together, we grow and strengthen our future.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </section>
 </main>

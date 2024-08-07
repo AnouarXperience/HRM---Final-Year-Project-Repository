@@ -9,8 +9,10 @@ import { UserAuthService } from 'src/app/sevices/user-auth.service';
   styleUrls: ['./acceuil.component.css']
 })
 export class AcceuilComponent implements OnInit {
+  currentYear: number = new Date().getFullYear();
 
-  constructor(    
+
+  constructor(
     private userAuthService: UserAuthService,
     private router: Router,
     public userService: UserService) { }
@@ -20,6 +22,9 @@ export class AcceuilComponent implements OnInit {
 
   public isLoggedIn() {
     return this.userAuthService.isLoggedIn();
+  }
+  isActive(url: string): boolean {
+    return this.router.url === url;
   }
 
 }

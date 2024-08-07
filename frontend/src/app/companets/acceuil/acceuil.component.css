@@ -32,23 +32,6 @@
 
 
 
-/* ul {
-
-    margin: 2rem 0;
-    padding: 0;
-  }
-
-  li {
-    list-style-type: style circle;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem; Margin using rem units for spacing
-  } */
-
-/* .s1{
-
-    background-image: linear-gradient(to right,white,black);
-} */
-
 
 .divMain {
     display: flex;
@@ -56,8 +39,6 @@
     background-color: black;
     color: white;
 }
-
-
 
 
 
@@ -245,7 +226,7 @@ html {
 
 /* Navbar CSS */
 .nav-item{color:white;
-    margin-left: 2.5rem ;
+    margin-left: 1rem ;
     font-size: 1rem;
 
 }
@@ -258,7 +239,7 @@ html {
     top: 0;
     z-index: 100;
     font-size: 3rem;
-    height: 110px; /* Set the desired height of the navbar */
+    height: 87px; /* Set the desired height of the navbar */
 
 }
 
@@ -284,7 +265,10 @@ html {
   font-size: medium;
   font-size: 1.5rem;
 }
-
+.nav-link.active {
+  /* Styles pour le lien actif */
+  color: #9a9a1d; /* Exemple de couleur de texte pour le lien actif */
+}
 
 .nav-link:hover {
   color: #9a9a1d; /* Color when the link is active or hovered over */

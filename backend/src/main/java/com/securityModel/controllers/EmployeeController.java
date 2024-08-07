@@ -1,9 +1,6 @@
 package com.securityModel.controllers;
 
-import com.securityModel.models.Administrateur;
-import com.securityModel.models.ERole;
-import com.securityModel.models.Employee;
-import com.securityModel.models.Role;
+import com.securityModel.models.*;
 import com.securityModel.payload.request.SignupRequest;
 import com.securityModel.payload.request.UpdateEmployeeRequest;
 import com.securityModel.payload.response.MessageResponse;
@@ -23,6 +20,7 @@ import jakarta.validation.Valid;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,11 +97,7 @@ public class EmployeeController{
     }
 
 
-//    @PutMapping("/updateEmp/{id}")
-//    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
-//        Employee updatedEmployee = employeeService.updateEmployeeDetails(employeeDetails);
-//        return ResponseEntity.ok(updatedEmployee);
-//    }
+
 
     @GetMapping("/exists/username/{username}")
     public ResponseEntity<Boolean> checkUsernameExists(@PathVariable String username) {
@@ -143,7 +138,7 @@ public class EmployeeController{
         // La ligne suivante suppose que vous avez un setter pour 'image' dans votre objet Employee ou un constructeur adapté.
         String fileName;
         try {
-            fileName = storgeService.store(file);
+            fileName = storgeService.store(file,true);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: File upload failed!"));
         }
@@ -155,42 +150,8 @@ public class EmployeeController{
                 encoder.encode(tempPassword), fileName, signUpRequest.getFirstname(), signUpRequest.getLastname(),
                 signUpRequest.getAddress(), signUpRequest.getDepartment(), signUpRequest.getDate_birth(),
                 signUpRequest.getJob(), signUpRequest.getHire_date(), signUpRequest.getSalary(),
-                signUpRequest.getId_card(), signUpRequest.getPhone());
+                signUpRequest.getId_card(), signUpRequest.getPhone(),signUpRequest.getGender(),signUpRequest.getContract_type());
 
-//        Set<String> strRoles = signUpRequest.getRole();
-//        Set<Role> roles = new HashSet<>();
-//
-//        if (strRoles == null) {
-//            Role userRole = roleRepository.findByName(ERole.ROLE_Employee)
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(userRole);
-//        } else {
-//            strRoles.forEach(role -> {
-//                switch (role) {
-//                    case "ROLE_Employee":
-//                        Role EmRole = roleRepository.findByName(ERole.ROLE_Employee)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(EmRole);
-//
-//                        break;
-//                    case "ROLE_Responsable":
-//                        Role ResRole = roleRepository.findByName(ERole.ROLE_Responsable)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(ResRole);
-//
-//                        break;
-//                    default:
-//                        Role adminRole = roleRepository.findByName(ERole.ROLE_Administrateur)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(adminRole);
-//                }
-//            });
-//        }
-//
-//        employee.setRoles(roles);
-//        userRepository.save(employee);
-
-        // Set role for user account
         Set<Role> roles = new HashSet<>();
         for (String roleName : signUpRequest.getRole()) {
             Role role = roleRepository.findByName(ERole.valueOf(roleName))
@@ -201,26 +162,32 @@ public class EmployeeController{
         employeeService.create(employee);
 
 
-        // Send confirmation email with temporary password
-        // Prepare and send the confirmation email
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setSubject("Please confirm your account to join our family and gain access to our services");
+        // Construire le contenu de l'email
+        String emailContent = "<html><body>"
+                + "<img src='cid:logo' alt='Logo' style='width:50px;height:auto;'><br><br>"
+                + "<h2>Welcome to DIGID! We're thrilled to have you join our family!</h2>"
+                + "<p>Here are your login details:</p>"
+                + "<ul style='font-size:18px;'><li>Registration Number: " + signUpRequest.getUsername() + "</li>"
+                + "<li>Password: " + tempPassword + "</li></ul>"
+                + "<p>Please click the link below to verify your email and complete your registration:</p>"
+                + "<a href=\"http://localhost:8086/users/confirme?email=" + signUpRequest.getEmail() + "\">Verify Your Account</a>"
+                + "<br><br>"
+                + "<p style='font-size:18px;'>DIGID Human Resources Department</p>"
+                + "</body></html>";
 
-        // Set sender name and email address
-        helper.setFrom("DIGID HR Department <no-reply@digid.com>");
+        // Préparer l'objet Email
+        Email emailMessage = new Email();
+        emailMessage.setSubject("Please confirm your account to join our family and gain access to our services");
+        emailMessage.setContent(emailContent);
+        emailMessage.setTo(signUpRequest.getEmail());
+        emailMessage.setFrom("DIGID HR Department <no-reply@digid.com>");
 
-        helper.setTo(signUpRequest.getEmail());
-        helper.setText("<HTML><BODY>" +
-                "<H2>Welcome to DIGID! We're thrilled to have you join our family.!</H2>" +
-                "<p>Here are your login details:</p>" +
-                "<ul><li>Registration Number: " + signUpRequest.getUsername() + "</li>" +
-                "<li>password: " + tempPassword + "</li></ul>" +
-                "<p>Please click the link below to verify your email and complete your registration:</p>" +
-                "<a href=\"http://localhost:8086/users/confirme?email=" + signUpRequest.getEmail() + "\">Verify Your Account</a></BODY></HTML>", true);
-        javaMailSender.send(message);
+        // Envoyer l'email avec l'image inline
+        emailService.sendHtmlMessageWithInlineImage(emailMessage, "upload/images/Picture1.png", "logo");
 
-        return ResponseEntity.ok(new MessageResponse("Employee registered successfully!, verify your email for confirmation"));
+        return ResponseEntity.ok(new MessageResponse("Employee registered successfully! Verify your email for confirmation."));
+
+
     }
 
     @PutMapping("/updateEmp/{id}")
@@ -235,7 +202,7 @@ public class EmployeeController{
         if (file != null && !file.isEmpty()) {
             String fileName;
             try {
-                fileName = storgeService.store(file);
+                fileName = storgeService.store(file,true);
                 existingEmployee.setImage(fileName);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(new MessageResponse("Error: File upload failed!"));
@@ -266,13 +233,29 @@ public class EmployeeController{
         employee.setHire_date(request.getHire_date());
         employee.setSalary(request.getSalary());
         employee.setPhone(request.getPhone());
+        employee.setContract_type(request.getContract_type());
     }
 
+    @GetMapping("/count-by-gender")
+    public Map<String, Long> countEmployeesByGender() {
+        return employeeService.getEmployeeCountByGender();
+    }
+
+
+    @GetMapping("/count-by-contract-type")
+    public Map<String, Long> countEmployeesByContractType() {
+        return employeeService.getEmployeeCountByContractType();
+    }
+
+    @GetMapping("/count-by-year")
+    public Map<Integer, Long> getEmployeeCountByYear() {
+        return employeeService.getEmployeeCountByYear();
+    }
 
 
     @GetMapping("/files/{filename:.+}")
     public ResponseEntity<Resource> loadfile(@PathVariable String filename ) {
-        Resource res = storgeService.loadFile(filename);
+        Resource res = storgeService.loadFile(filename,true);
         HttpHeaders httpHeaders = new HttpHeaders();
         Map<String, String> extensionToContentType = new HashMap<>();
         extensionToContentType.put("pdf", "application/pdf");
@@ -287,5 +270,9 @@ public class EmployeeController{
 // Définissez le type de contenu dans les en-têtes de réponse
         httpHeaders.setContentType(MediaType.parseMediaType(contentType));
         return ResponseEntity.ok().headers(httpHeaders).body(res);
+    }
+    @GetMapping("/count-by-status")
+    public Map<String, Long> countEmployeesByStatus() {
+        return employeeService.getEmployeeCountByStatus();
     }
 }

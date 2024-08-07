@@ -1,29 +1,29 @@
-#custom-button {
-  background-color: #DC143C; /* Background color red for the button */
+/* Custom Button */
+#emp-custom-button {
+  background-color: #a92e47; /* Background color red for the button */
   color: white; /* Text color white for better contrast */
   border: none; /* Remove default button border */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px; /* Padding for better spacing */
+  padding: 12px; /* Padding for better spacing */
   text-decoration: none; /* Remove underline from link styling */
   margin-top: -20px;
 }
 
-#custom-button .custom-icon {
+#emp-custom-button .emp-custom-icon {
   margin-right: 5px; /* Space between the icon and the text */
   font-size: 1em; /* Adjust icon size if needed */
 }
 
-#custom-button span {
+#emp-custom-button span {
   text-align: center;
   color: white; /* Text color white */
   text-decoration: none; /* Ensure the text is not underlined */
 }
 
-
 /* Centrer les contrôles de pagination */
-.pagination-controls {
+.emp-pagination-controls {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,30 +32,27 @@
   padding: 10px 0; /* Ajoutez du padding pour mieux positionner les contrôles */
 }
 
-.row {
+.emp-row {
   width: 100%; /* Permet le défilement horizontal si le tableau est trop large */
 }
 
-
-table {
+.emp-table {
   width: 100%;
   table-layout: relative; /* Cela force le tableau à respecter les largeurs de colonne spécifiées */
-
-
 }
 
-th, td {
+.emp-table th, .emp-table td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 /* Spécifiez la largeur des colonnes pour les actions et les longs textes */
-th.col-action, td.col-action {
+.emp-col-action {
   width: 200px; /* Ajustez selon la taille réelle des boutons */
 }
 
-th.col-text, td.col-text {
+.emp-col-text {
   width: auto; /* Prendra le reste de la largeur disponible */
 }
 
@@ -67,7 +64,6 @@ th.col-text, td.col-text {
 .btn-group {
   white-space: nowrap; /* Empêche les boutons de passer à la ligne suivante */
 }
-
 
 input[type="search"]::-ms-clear {
   display: none;
@@ -86,20 +82,23 @@ input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;
 }
+
 .hide {
   display: none;
 }
 
-
-.search-bar input.form-control {
+.emp-search-bar input.form-control {
   padding-left: 30px;  /* Adjust this based on the size of your search icon */
   padding-right: 30px; /* Adjust this based on the size of your clear icon */
+  border-radius: 25px;
 }
-#searchInput{
+
+#searchInput {
   border-width: 2px; /* Adjust as needed for thickness */
   border-style: solid; /* Ensuring the border style is solid */
   border-color: #808080; /* You can customize the color as needed */
 }
+
 input.form-control {
   /* Adding a box shadow */
   box-shadow: 0 2px 5px #C0C0C0; /* Adjust the rgba values based on your color preference */
@@ -113,21 +112,22 @@ input.form-control:focus {
   box-shadow: 0 4px 8px #C0C0C0; /* Stronger shadow on focus */
 }
 
-.custom-search-input {
+.emp-custom-search-input {
   height: 48px;
-
 }
+
 /* Additional styles for employee component */
-body main#main.employee-main {
-  padding-bottom: 290px ; /* Adjust this value based on the actual height of your footer */
+body main#main.emp-main {
+  padding-bottom: 290px; /* Adjust this value based on the actual height of your footer */
 }
 
 @media (max-width: 768px) {
-  .main.employee-main {
-      padding-bottom: 100px; /* Larger padding for smaller screens if needed */
+  .main.emp-main {
+    padding-bottom: 100px; /* Larger padding for smaller screens if needed */
   }
 }
-.employee-image {
+
+.emp-employee-image {
   width: 65px; /* Set the desired width */
   height: auto; /* Maintain aspect ratio */
   border-radius: 45%; /* Optional: make the image circular */
@@ -135,26 +135,25 @@ body main#main.employee-main {
   margin: auto; /* Center the image within the table cell */
 }
 
-.table-header th {
-
+.emp-table-header th {
   background-color: #DCDCDC !important; /* Set background color to gray */
   padding: 15px;
 }
 
-.switch {
+.emp-switch {
   position: relative;
   display: inline-block;
-  width: 100px;
-  height: 34px;
+  width: 80px;
+  height: 27px;
 }
 
-.switch input {
+.emp-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.slider {
+.emp-slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -170,7 +169,7 @@ body main#main.employee-main {
   font-size: 12px;
 }
 
-.status-text {
+.emp-status-text {
   position: absolute;
   font-size: 0.8rem;
   width: 100%;
@@ -178,7 +177,7 @@ body main#main.employee-main {
   z-index: 1;
 }
 
-.slider:before {
+.emp-slider:before {
   position: absolute;
   content: "";
   height: 26px;
@@ -190,22 +189,66 @@ body main#main.employee-main {
   z-index: 2;
 }
 
-input:checked + .slider {
+input:checked + .emp-slider {
   background-color: green;
 }
 
-input:checked + .slider:before {
-  transform: translateX(67px); /* Adjust this value based on the width */
+input:checked + .emp-slider:before {
+  transform: translateX(57px); /* Adjust this value based on the width */
 }
 
-.slider.round {
-  border-radius: 34px;
+.emp-slider.round {
+  border-radius: 20px;
 }
 
-.slider.round:before {
+.emp-slider.round:before {
   border-radius: 100%;
+  width: 15px;
+  height: 20px;
+}
+
+.emp-custom-export-button,
+.emp-custom-export-buttonpdf {
+  display: flex;
+  align-items: center;
+  background-color: #e2e6ea; /* Button background color */
+  border: 1px solid #ced4da; /* Border color */
+  color: black; /* Text color */
+  font-size: 17px; /* Font size */
+  padding: 10px 15px; /* Padding */
+  border-radius: 4px; /* Rounded corners */
+  text-decoration: none; /* Remove underline from text */
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+  margin-bottom: 25px;
+}
+
+.emp-custom-export-button:hover {
+  background-color: #d4d8dc; /* Hover background color */
+  color: black;
+}
+
+.emp-custom-export-buttonpdf:hover {
+  background-color: #d4d8dc; /* Hover background color */
+  color: black;
+}
+
+.emp-export-icon {
+  height: 20px;
   width: 20px;
+  margin-right: 5px; /* Space between icon and text */
+}
+
+.emp-export-iconpdf {
   height: 25px;
+  width: 25px;
+  margin-right: 5px; /* Space between icon and text */
 }
 
 
+.emp-special-gray-cell {
+  background-color: #DCDCDC !important; /* Light gray background */
+  color: #111010; /* Dark gray text */
+  font-weight: bold;
+  text-align: left;
+  padding: 10px;
+}

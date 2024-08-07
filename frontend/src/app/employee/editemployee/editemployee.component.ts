@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Observable, map, switchMap, tap } from 'rxjs';
 import { EmployeeService } from 'src/app/sevices/employee.service';
+import { UserAuthService } from 'src/app/sevices/user-auth.service'; // Assurez-vous d'importer le service
 
 export class Role {
   id: number;
@@ -24,9 +24,12 @@ export class EditemployeeComponent implements OnInit {
   selectedFile: File = null;
   isEditMode: boolean = false;
   availableRoles: any[] = [];
+  contract_type: string[] = ['CDI', 'CDD', 'CIVP', 'Karama']; // Contract types
+
 
   constructor(
     private employeeService: EmployeeService,
+    private userAuthService: UserAuthService, // Injectez le service
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private router: Router
@@ -45,7 +48,8 @@ export class EditemployeeComponent implements OnInit {
       salary: ['', Validators.required],
       phone: ['', Validators.required],
       image: [''],
-      role: ['']
+      role: [''],
+      contract_type: ['', Validators.required]
     });
 
     this.loadRoles().pipe(
@@ -57,7 +61,16 @@ export class EditemployeeComponent implements OnInit {
 
   loadRoles(): Observable<any[]> {
     return this.employeeService.getAllroles().pipe(
-      map(roles => roles.filter(role => role.name !== 'Administrateur')), // Filter out the 'Administrateur' role
+      map(roles => {
+        const currentUserRoles = this.userAuthService.getRoles();
+        if (currentUserRoles.includes('Administrateur')) {
+          return roles.filter(role => role.name !== 'Administrateur');
+        } else if (currentUserRoles.includes('Responsable')) {
+          return roles.filter(role => role.name === 'Employee' || role.name === 'Recruteur');
+        } else {
+          return roles; // Ou une autre logique pour d'autres rôles
+        }
+      }),
       tap(filteredRoles => this.availableRoles = filteredRoles) // Set the filtered roles
     );
   }
@@ -74,10 +87,11 @@ export class EditemployeeComponent implements OnInit {
       hire_date: this.convertDateToDatetimeLocalFormat(employee.hire_date),
       salary: employee.salary,
       phone: employee.phone,
-      role: employee.roles.map(role => role.id)
+      role: employee.roles.map(role => role.id),
+      contract_type: employee.contract_type
+
     });
     this.imageUrl = employee.image ? `http://localhost:8086/employee/files/${employee.image}` : '';
-    // console.log("Employee details:", this.oneemployee);
   }
 
   convertDateToDatetimeLocalFormat(date: Date | string): string {
@@ -100,8 +114,7 @@ export class EditemployeeComponent implements OnInit {
       return;
     }
 
-    // Convert role ID to role name (if necessary)
-    const formValue = {...this.form.value};
+    const formValue = { ...this.form.value };
     const role = this.availableRoles.find(r => r.id === parseInt(formValue.role, 10));
     formValue.role = role ? role.name : '';
 
@@ -115,11 +128,8 @@ export class EditemployeeComponent implements OnInit {
       confirmButtonText: 'Yes, update it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        // console.log("Data sent for modification:", formValue);
-
         this.employeeService.modfieremployee(this.id, formValue, this.selectedFile).subscribe({
           next: (res: any) => {
-            // console.log("Employee modified:", res);
             Swal.fire({
               title: 'Success!',
               text: 'Employee updated successfully!',

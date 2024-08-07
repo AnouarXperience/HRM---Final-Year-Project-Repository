@@ -1,37 +1,85 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import * as CryptoJS from 'crypto-js';
 // import { UserService } from 'src/app/sevices/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserAuthService {
+  private secretKey = 'DIGID2024';
   private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn());
 
   constructor() {}
 
+  private encryptData(data: any): string {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), this.secretKey).toString();
+  }
+
+  private decryptData(data: string): any {
+    const bytes = CryptoJS.AES.decrypt(data, this.secretKey);
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  }
+  public setUsername(username: string): void {
+    const encryptedUsername = this.encryptData(username);
+    localStorage.setItem('username', encryptedUsername);
+  }
+  public getusername(): string {
+    const encryptedUsername = localStorage.getItem('username');
+    if (encryptedUsername) {
+      return this.decryptData(encryptedUsername);
+    }
+    return '';
+  }
+
+  setUserId(id: number): void {
+    const encryptedId = this.encryptData(id);
+    localStorage.setItem('userId', encryptedId);
+  }
+
+  getUserId(): number | null {
+    const encryptedId = localStorage.getItem('userId');
+    if (encryptedId) {
+      return this.decryptData(encryptedId);
+    }
+    return null;
+  }
+
+
+
+
   public setRoles(roles: string[]): void {
-    localStorage.setItem('roles', JSON.stringify(roles));
+    const encryptedRoles = this.encryptData(roles);
+    localStorage.setItem('roles', encryptedRoles);
   }
 
   public getRoles(): string[] {
-    return JSON.parse(localStorage.getItem('roles'));
+    const encryptedRoles = localStorage.getItem('roles');
+    if (encryptedRoles) {
+      return this.decryptData(encryptedRoles);
+    }
+    return [];
   }
 
   public setToken(jwtToken: string): void {
-    localStorage.setItem('jwtToken', jwtToken);
+    const encryptedToken = this.encryptData(jwtToken);
+    localStorage.setItem('jwtToken', encryptedToken);
     this.loggedIn.next(true);
   }
 
-  public getToken(): string {
-    return localStorage.getItem('jwtToken');
+  public getToken(): string | null {
+    const encryptedToken = localStorage.getItem('jwtToken');
+    if (encryptedToken) {
+      return this.decryptData(encryptedToken);
+    }
+    return null;
   }
-
 
   public clear(): void {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('roles');
-    localStorage.removeItem('username');
+    localStorage.removeItem('userId');
+    sessionStorage.removeItem('username');
     this.loggedIn.next(false);
   }
 

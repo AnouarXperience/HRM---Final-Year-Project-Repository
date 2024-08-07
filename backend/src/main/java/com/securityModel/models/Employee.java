@@ -1,13 +1,17 @@
 package com.securityModel.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -31,10 +35,21 @@ public class Employee extends User{
 
 	private String phone;
 
+	private String gender;
+
+	private String contract_type;
+
+
+
+
+
+
+
+
 	public Employee() {
 	}
 
-	public Employee(String username, String email, String password, String image, String firstname, String lastname, String address, String department, String date_birth, String job, String hire_date, double salary, String id_card, String phone) {
+	public Employee(String username, String email, String password, String image, String firstname, String lastname, String address, String department, String date_birth, String job, String hire_date, double salary, String id_card, String phone, String gender, String contract_type) {
 		super(username, email, password, image);
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -46,7 +61,11 @@ public class Employee extends User{
 		this.salary = salary;
 		this.id_card = id_card;
 		this.phone = phone;
+		this.gender = gender;
+		this.contract_type = contract_type;
 	}
+
+
 
 	public String getFirstname() {
 		return firstname;
@@ -126,5 +145,21 @@ public class Employee extends User{
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getContract_type() {
+		return contract_type;
+	}
+
+	public void setContract_type(String contract_type) {
+		this.contract_type = contract_type;
 	}
 }

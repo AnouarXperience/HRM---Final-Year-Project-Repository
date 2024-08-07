@@ -45,6 +45,9 @@ public class SignupRequest {
     private String phone;
 
     private String image;
+    private String gender;
+
+    private String contract_type;
 
 
   
@@ -166,5 +169,21 @@ public class SignupRequest {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getContract_type() {
+        return contract_type;
+    }
+
+    public void setContract_type(String contract_type) {
+        this.contract_type = contract_type;
     }
 }

@@ -3,6 +3,8 @@ package com.securityModel.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -49,6 +51,7 @@ public abstract class User {
 
 
 	public User() {
+
 	}
 
 	public User(String username, String email, String password, String image) {
@@ -121,4 +124,7 @@ public abstract class User {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+
+
+
 }

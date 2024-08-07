@@ -87,7 +87,7 @@ public class AdministrateurController {
 
             // Handle file upload
             if (file != null && !file.isEmpty()) {
-                String fileName = storgeService.store(file);
+                String fileName = storgeService.store(file,true);
                 existingAdmin.setImage(fileName);
             } else {
                 // Log a warning if the file is not present or empty
@@ -107,6 +107,7 @@ public class AdministrateurController {
     }
 
     private void updateAdminData(Administrateur existingAdmin, UpdateAdministrateurRequest updateRequest) {
+        existingAdmin.setEmail(updateRequest.getEmail());
         existingAdmin.setFirstname(updateRequest.getFirstname());
         existingAdmin.setLastname(updateRequest.getLastname());
         existingAdmin.setAddress(updateRequest.getAddress());
@@ -115,6 +116,7 @@ public class AdministrateurController {
         existingAdmin.setSalary(updateRequest.getSalary());
         existingAdmin.setId_card(updateRequest.getId_card());
         existingAdmin.setPhone(updateRequest.getPhone());
+
     }
 
 
@@ -137,7 +139,7 @@ public class AdministrateurController {
 
     @GetMapping("/files/{filename:.+}")
     public ResponseEntity<Resource> loadfile(@PathVariable String filename ) {
-        Resource res = storgeService.loadFile(filename);
+        Resource res = storgeService.loadFile(filename,true);
         HttpHeaders httpHeaders = new HttpHeaders();
         Map<String, String> extensionToContentType = new HashMap<>();
         extensionToContentType.put("pdf", "application/pdf");

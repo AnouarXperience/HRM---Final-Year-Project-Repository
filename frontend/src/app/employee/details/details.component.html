@@ -87,6 +87,14 @@
                   <div class="col-lg-3 col-md-4 label">Date of Birth</div>
                   <div class="col-lg-9 col-md-8">{{ oneemployee?.date_birth}}</div>
                 </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Gender</div>
+                  <div class="col-lg-9 col-md-8">{{ oneemployee?.gender}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Contract Type</div>
+                  <div class="col-lg-9 col-md-8">{{ oneemployee?.contract_type}}</div>
+                </div>
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label">Hiring date</div>
@@ -103,11 +111,8 @@
                   </div>
                 </div>
 
-
-
-
-                <button (click)="downloadProfile()" class="btn btn-primary mt-3">
-                  <i class="bi bi-file-earmark-pdf-fill" style="color: white; font-size: 25px;"></i> Download
+                <button (click)="downloadProfile()" class="btn btn-primary details-btn mt-3">
+                  <img src="assets/img/pdf.png" alt="Export to PDF" class="export-iconpdf"> Export
                 </button>
 
 
