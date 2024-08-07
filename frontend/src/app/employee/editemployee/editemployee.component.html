@@ -115,6 +115,17 @@
                     </div>
                   </div>
                   <div class="row mb-3">
+                    <label for="contract_type" class="col-md-4 col-lg-3 col-form-label">Contract Type</label>
+                    <div class="col-md-8 col-lg-9">
+                      <select class="form-control" id="contract_type" formControlName="contract_type">
+                        <option *ngFor="let type of contract_type" [value]="type">
+                          {{ type }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
                     <label for="role" class="col-md-4 col-lg-3 col-form-label">Role</label>
                     <div class="col-md-8 col-lg-9">
                         <select class="form-control" id="role" formControlName="role">

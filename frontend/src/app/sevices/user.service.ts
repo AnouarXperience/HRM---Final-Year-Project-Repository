@@ -12,12 +12,14 @@ export interface UserProfile {
   job: string;
   address: string;
   phone: string;
-  email:string;
-  id_card :string;
-  salary:string;
-  date_birth:string;
-  hire_date:string;
-  department:string;
+  email: string;
+  id_card: string;
+  salary: string;
+  date_birth: string;
+  hire_date: string;
+  department: string;
+  contract_type: String;
+  gender: String;
   image?: string;
 }
 
@@ -25,19 +27,9 @@ export interface UserProfile {
   providedIn: 'root'
 })
 export class UserService {
-  localStorage: any;
 
+  constructor(private httpClient: HttpClient, private userAuthService: UserAuthService) { }
 
-
-
-
-
-  // requestHeader = new HttpHeaders(
-  //   {
-  //     "No-Auth":"True"
-  //   }
-  // );
-  constructor(private httpClient: HttpClient, private userAuthService : UserAuthService) { }
 
 
   public login(loginRequest: any): Observable<any> {
@@ -45,23 +37,45 @@ export class UserService {
       tap((response: any) => {
         if (response) {
           if (response.username) {
-
-            localStorage.setItem('username', response.username); // Store username in localStorage
+            this.userAuthService.setUsername(response.username); // Store encrypted username
           } else {
             console.error('Username not found in response'); // Log an error if username is not found
           }
           if (response.jwt) {
-          
-            localStorage.setItem('token', response.jwt); // Store the token in localStorage
+            this.userAuthService.setToken(response.jwt); // Store encrypted token
           } else {
-            console.error('Token not found in response'); // Log an error if token is not found
+
+          }
+          if (response.id) {
+            this.userAuthService.setUserId(response.id); // Store encrypted user ID
+          } else {
+            console.error('User ID not found in response'); // Log an error if user ID is not found
           }
         } else {
           console.error('Response is null or undefined'); // Log an error if response is null or undefined
         }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Login error:', error);
+        return throwError(() => new Error('Failed to login: ' + error.message));
       })
     );
   }
+
+  UserProfileById(): Observable<UserProfile> {
+    const userId = this.userAuthService.getUserId();
+    if (userId) {
+      return this.httpClient.get<UserProfile>(`${environment.baseurl}/users/getone/${userId}`).pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error('Get user profile error:', error);
+          return throwError(() => new Error('Failed to get user profile: ' + error.message));
+        })
+      );
+    } else {
+      return throwError(() => new Error('User ID not found in session'));
+    }
+  }
+
 
   getUserProfile(): Observable<UserProfile> {
     const username = localStorage.getItem('username');
@@ -71,76 +85,116 @@ export class UserService {
         throw new Error('No username found in session');
     }
 }
+
+
   getoneusers(id: number): Observable<any> {
-    return this.httpClient.get(`${environment.baseurl}/users/getone/${id}`);
+    return this.httpClient.get(`${environment.baseurl}/users/getone/${id}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Get one user error:', error);
+        return throwError(() => new Error('Failed to get user: ' + error.message));
+      })
+    );
   }
 
-  public signout(token: string): Observable<any> {
-    // Inclure le token dans l'en-tête de la requête
+  public signout(): Observable<any> {
+    const token = this.userAuthService.getToken();
+    if (!token) {
+      return throwError(() => new Error('No token found for signout'));
+    }
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    // Faire la requête de déconnexion avec l'en-tête d'autorisation
-    return this.httpClient.post(`${environment.baseurl}/api/auth/signout`, {}, { headers });
+    return this.httpClient.post(`${environment.baseurl}/api/auth/signout`, {}, { headers }).pipe(
+      tap(() => {
+        this.userAuthService.clear();
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Signout error:', error);
+        return throwError(() => new Error('Failed to sign out: ' + error.message));
+      })
+    );
   }
 
-  public forUser() {
-    return this.httpClient.get(`${environment.baseurl}` + '/api/auth/signin', {
-      responseType: 'text',
-    });
+  public forUser(): Observable<string> {
+    return this.httpClient.get(`${environment.baseurl}/api/auth/signin`, { responseType: 'text' }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('forUser error:', error);
+        return throwError(() => new Error('Failed to get user: ' + error.message));
+      })
+    );
   }
 
-
-  public forAdmin() {
-    return this.httpClient.get(`${environment.baseurl}` + '/api/auth/signin', {
-      responseType: 'text',
-    });
+  public forAdmin(): Observable<string> {
+    return this.httpClient.get(`${environment.baseurl}/api/auth/signin`, { responseType: 'text' }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('forAdmin error:', error);
+        return throwError(() => new Error('Failed to get admin: ' + error.message));
+      })
+    );
   }
+
   public roleMatch(allowedRoles: string[]): boolean {
     const userRoles: string[] = this.userAuthService.getRoles();
-
-    if (userRoles != null && userRoles) {
-      for (let i = 0; i < userRoles.length; i++) {
-        for (let j = 0; j < allowedRoles.length; j++) {
-          if (userRoles[i] === allowedRoles[j]) {
-            return true;
-          }
-        }
-      }
+    if (userRoles) {
+      return allowedRoles.some(role => userRoles.includes(role));
     }
     return false;
   }
-  changePass(payload: { username: string; currentPassword: string; newPassword: string }): Observable<any> {
-    return this.httpClient.post(`${environment.baseurl}/users/changepassword`, payload);
-}
 
-
-  forgotPass(email: string) {
-    return this.httpClient.post(`${environment.baseurl}/users/forgetpassword`, { email: email });
+  changePass(payload: { userId: number; currentPassword: string; newPassword: string }): Observable<any> {
+    return this.httpClient.post(`${environment.baseurl}/users/changepassword`, payload).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Change password error:', error);
+        return throwError(() => new Error('Failed to change password: ' + error.message));
+      })
+    );
   }
 
+  forgotPass(email: string): Observable<any> {
+    return this.httpClient.post(`${environment.baseurl}/users/forgetpassword`, { email }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Forgot password error:', error);
+        return throwError(() => new Error('Failed to send forgot password request: ' + error.message));
+      })
+    );
+  }
 
   resetPass(verificationCode: string, newPassword: string): Observable<any> {
-    const url = `${environment.baseurl}/users/resetpassword`;
-    return this.httpClient.post(url, { verificationCode, newPassword }).pipe(
+    return this.httpClient.post(`${environment.baseurl}/users/resetpassword`, { verificationCode, newPassword }).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error(`Service error: ${error.status} ${error.statusText}`, error.error);
-        return throwError(() => new Error(`Failed to reset password due to server error: ${error.message}`));
+        console.error('Reset password error:', error);
+        return throwError(() => new Error('Failed to reset password: ' + error.message));
       })
     );
   }
 
   updateadmin(id: number, formData: FormData): Observable<any> {
-    return this.httpClient.put(`${environment.baseurl}/administrateur/updateAdmin/${id}`, formData);
+    return this.httpClient.put(`${environment.baseurl}/administrateur/updateAdmin/${id}`, formData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Update admin error:', error);
+        return throwError(() => new Error('Failed to update admin: ' + error.message));
+      })
+    );
   }
 
   resetAdminImage(id: number, formData: FormData): Observable<any> {
-    return this.httpClient.put(`${environment.baseurl}/administrateur/resetImage/${id}`, formData);
+    return this.httpClient.put(`${environment.baseurl}/administrateur/resetImage/${id}`, formData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Reset admin image error:', error);
+        return throwError(() => new Error('Failed to reset admin image: ' + error.message));
+      })
+    );
   }
 
-
+  getCurrentUserProfile(): Observable<UserProfile> {
+    const username = this.userAuthService.getusername();
+    return this.httpClient.get<UserProfile>(`${environment.baseurl}/users/username/${username}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Get user profile error:', error);
+        return throwError(() => new Error('Failed to get user profile: ' + error.message));
+      })
+    );
+  }
 }
-
-
-

@@ -11,6 +11,7 @@ export class SidebarComponent implements OnInit {
   isSidebarExpanded = true;
   imageUrl: string = '';
   error: string | null = null;
+  userId: number;
 
   toggleSidebar(): void {
     this.isSidebarExpanded = !this.isSidebarExpanded;
@@ -19,7 +20,7 @@ export class SidebarComponent implements OnInit {
   constructor(public userService: UserService) { }
 
   ngOnInit(): void {
-    this.userService.getUserProfile().subscribe({
+    this.userService.UserProfileById().subscribe({
       next: (profile) => {
         this.profile = profile;
         this.imageUrl = profile.image ? `http://localhost:8086/employee/files/${profile.image}` : '';

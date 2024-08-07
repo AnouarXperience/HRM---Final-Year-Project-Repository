@@ -15,6 +15,9 @@ if linkage != nil
 end
 
 target 'HrPoint' do
+  # Ajout de react-native-config
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+  
   config = use_native_modules!
 
   use_react_native!(

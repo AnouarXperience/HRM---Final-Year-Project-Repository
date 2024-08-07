@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   message: {
     marginBottom: 20,
     textAlign: 'center',
+    fontFamily: 'DMSans-Regular', // Use custom font
   },
   button: {
     backgroundColor: '#120E43',
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 16,
+    fontFamily: 'DMSans-Regular', // Use custom font
   },
 });
 

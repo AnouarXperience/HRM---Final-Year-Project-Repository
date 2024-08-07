@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/sevices/user.service';
 import { UserAuthService } from 'src/app/sevices/user-auth.service';
+import { UserService } from 'src/app/sevices/user.service';
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,6 +22,20 @@ export class LoginComponent implements OnInit {
   isLoading: boolean = false;
   failedAttempts: number = 0;
   resetPasswordSuccessful: boolean = false;
+  currentYear: number = new Date().getFullYear();
+
+  // New properties for password strength
+  passwordStrength = 'weak';
+  passwordStrengthText = 'Weak';
+  tooltipVisible = false;
+  passwordStrongEnough = false;
+  passwordRequirements = {
+    minLength: false,
+    lowerCase: false,
+    upperCase: false,
+    number: false,
+    specialChar: false
+  };
 
   constructor(
     private userService: UserService,
@@ -54,6 +69,10 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  isActive(url: string): boolean {
+    return this.router.url === url;
+  }
+
   login() {
     this.formSubmitted = true;
 
@@ -69,8 +88,6 @@ export class LoginComponent implements OnInit {
       password: this.form.value.password
     };
 
-    
-
     this.userService.login(loginRequest).subscribe(
       (response: any) => {
         const roles = response.roles;
@@ -83,7 +100,16 @@ export class LoginComponent implements OnInit {
           const isAdmin = roles.includes('Administrateur');
           const isManager = roles.includes('Responsable');
           const employee = roles.includes('Employee');
-          const Recruteur = roles.includes('Recruteur')
+          const Recruteur = roles.includes('Recruteur');
+
+          Swal.fire({
+            title: 'Welcome',
+            text: 'Login Successful',
+            icon: 'success',
+            timer: 2750,  // Auto close after 3 seconds
+            showConfirmButton: false
+          });
+
           if (isAdmin || isManager || employee || Recruteur) {
             this.router.navigate(['/home']);
           } else {
@@ -98,10 +124,6 @@ export class LoginComponent implements OnInit {
         console.error('Login failed:', error);
         Swal.fire('Login Failed', 'Invalid email or password', 'error');
         this.failedAttempts++;
-        if (this.failedAttempts === 3) {
-          this.isLoading = false;
-          return;
-        }
         this.isLoading = false;
       }
     );
@@ -143,7 +165,9 @@ export class LoginComponent implements OnInit {
   }
 
   resetPassword() {
-    if (this.resetPasswordForm.valid) {
+    this.formSubmitted = true;
+
+    if (this.resetPasswordForm.valid && this.passwordStrongEnough) {
       const verificationCode = this.resetPasswordForm.get('verificationCode').value;
       const newPassword = this.resetPasswordForm.get('newPassword').value;
 
@@ -159,12 +183,56 @@ export class LoginComponent implements OnInit {
           });
         },
         error: (error) => {
-          console.error('Failed to reset password:', error);
-          Swal.fire('Error!', error.message || 'Failed to reset password. Please try again later.', 'error');
+          console.error(error); // Affiche l'objet d'erreur complet dans la console
+          let errorMessage = 'Failed to reset password. Please try again later.';
+          // Adaptez cette condition en fonction de la structure réelle de l'objet d'erreur
+          if (error.status === 400 && error.error && error.error.message && error.error.message.includes('Invalid verification code')) {
+            errorMessage = 'The verification code you entered is incorrect. Please try again.';
+          } else if (error.status === 400 && error.message && error.message.includes('Invalid verification code')) {
+            errorMessage = 'The verification code you entered is incorrect. Please try again.';
+          }
+
+          Swal.fire('Error!', errorMessage, 'error');
         }
       });
     } else {
       Swal.fire('Attention!', 'Please check the form for errors.', 'info');
     }
+  }
+
+  onPasswordInput() {
+    const password = this.resetPasswordForm.get('newPassword')?.value;
+    this.passwordRequirements.minLength = password.length >= 8;
+    this.passwordRequirements.lowerCase = /[a-z]/.test(password);
+    this.passwordRequirements.upperCase = /[A-Z]/.test(password);
+    this.passwordRequirements.number = /[0-9]/.test(password);
+    this.passwordRequirements.specialChar = /[\W_]/.test(password);
+
+    this.updatePasswordStrength();
+  }
+
+  updatePasswordStrength() {
+    const { minLength, lowerCase, upperCase, number, specialChar } = this.passwordRequirements;
+    if (minLength && lowerCase && upperCase && number && specialChar) {
+      this.passwordStrength = 'strong';
+      this.passwordStrengthText = 'Strong';
+      this.passwordStrongEnough = true;
+    } else if (minLength && (lowerCase || upperCase || number || specialChar)) {
+      this.passwordStrength = 'medium';
+      this.passwordStrengthText = 'Medium';
+      this.passwordStrongEnough = false;
+    } else {
+      this.passwordStrength = 'weak';
+      this.passwordStrengthText = 'Weak';
+      this.passwordStrongEnough = false;
+    }
+  }
+
+  showTooltip() {
+    this.tooltipVisible = true;
+  }
+
+  hideTooltip() {
+    this.tooltipVisible = false;
   }
 }

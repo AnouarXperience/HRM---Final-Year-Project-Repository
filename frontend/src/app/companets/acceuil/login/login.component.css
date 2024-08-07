@@ -8,6 +8,186 @@ background: #eee;
 .h-custom {
 height: calc(100% - 73px);
 }
+
+/* Button style */
+.btn-login {
+  background-color: #383838 !important;
+  color: #fff;
+  border: none;
+  padding: 10x 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 21px;
+
+}
+
+/* Hover style for button */
+.btn-login:hover {
+  background-color: #585858 !important; /* Darker shade for hover */
+}
+
+
+
+/* Style for the form container */
+.reset-password-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* General input field style */
+.reset-password-form input[type="text"],
+.reset-password-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+/* Input field focus style */
+.reset-password-form input[type="text"]:focus,
+.reset-password-form input[type="password"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Label style */
+.reset-password-form label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Password strength bar container */
+.password-strength {
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+/* Password strength bar */
+.strength-bar {
+  height: 100%;
+  width: 0;
+  background-color: lightgray;
+  border-radius: 5px;
+  transition: width 0.5s;
+}
+
+.weak {
+  width: 33%;
+  background-color: red;
+}
+
+.medium {
+  width: 66%;
+  background-color: yellow;
+}
+
+.strong {
+  width: 100%;
+  background-color: green;
+}
+
+/* Password strength text */
+.password-strength-text {
+  font-weight: bold;
+  text-transform: capitalize;
+  margin-bottom: 10px;
+}
+
+/* Button style */
+.reset-password-btn {
+  background-color: #060606;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+/* Style for enabled button (strong password) */
+.reset-password-btn:enabled {
+  opacity: 1;
+}
+
+/* Style for disabled button */
+.reset-password-btn:disabled {
+  background-color: #6c757d; /* Grey background for disabled state */
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+
+
+
+/* Tooltip style */
+.password-requirements-tooltip {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1000;
+  width: 300px;
+  margin-top: -32px;
+}
+
+.password-requirements-tooltip .tooltip-arrow {
+  position: absolute;
+  top: -20px; /* Adjust based on the size of the arrow */
+  left: 20px; /* Adjust to align with the input field */
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 20px solid #f8f9fa;
+  z-index: -1;
+}
+
+.password-requirements-tooltip .tooltip-inner {
+  padding: 5px;
+}
+
+.password-requirements-tooltip ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.password-requirements-tooltip li {
+  padding: 5px 0;
+  color: #dc3545;
+}
+
+.password-requirements-tooltip li.met {
+  color: #28a745;
+}
+
+.position-relative {
+  position: relative;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 @media (max-width: 450px) {
     .h-custom {
       height: auto; /* Set height to auto on smaller screens */
@@ -23,10 +203,21 @@ height: calc(100% - 73px);
 
 }
 
-.nav-link{
-    font-size: medium;
-    font-size: 1.5rem;
+.nav-link {
+  color: white; /* Default link color */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+  font-size: 1.5rem;
 }
+
+.nav-link.active {
+  /* Styles pour le lien actif */
+  color: #9a9a1d; /* Exemple de couleur de texte pour le lien actif */
+}
+
+.nav-link:hover {
+  color: #9a9a1d; /* Color when the link is active or hovered over */
+}
+
 
 
 .navbar{
@@ -36,6 +227,7 @@ height: calc(100% - 73px);
     top: 0;
     z-index: 100;
     font-size: 3rem;
+    height: 87px;
 }
 
 .footer {
@@ -170,9 +362,7 @@ height: calc(100% - 73px);
   cursor: pointer; /* Curseur pointer pour indiquer que le bouton est cliquable */
   transition: color 0.3s; /* Animation de transition pour la couleur du texte */
 }
-.reset-password-btn:hover {
-    background-color:  #23282c !important; /* Couleur du texte lorsqu'on survole le bouton */
-  }
+
 /* Style du bouton pour voir le mot de passe */
 .login-form .input-group button {
   border: none;
@@ -207,4 +397,15 @@ height: calc(100% - 73px);
 /* Style pour définir la taille du texte du lien "Cancel" */
 .cancel-link {
   font-size: 1rem; /* Taille du texte */
+}
+#logo {
+  max-width: 55px;
+  max-height: 55px;
+  filter: invert(1) brightness(2) contrast(2); /* Makes the image white */
+  margin-right: 25px; /* Adds space between the logo and the Home link */
+}
+
+.logo-link {
+  display: inline-block;
+  cursor: pointer; /* Change cursor to pointer when hovering over the logo */
 }

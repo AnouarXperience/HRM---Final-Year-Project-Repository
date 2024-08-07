@@ -1,26 +1,42 @@
 .loader-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* Ensure the loader is above other elements */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Arrange items in a column */
+  z-index: 9999; /* Ensure the loader is above other elements */
+}
+
+.loader {
+  position: relative;
+}
+
+.loader img {
+  width: 90px; /* Adjust the size of the logo */
+  height: auto;
+  animation: fadeInOut 4s infinite; /* Animation for fading in and out */
+}
+
+.loader-text {
+  margin-top: 20px; /* Space between logo and text */
+  font-size: 30px; /* Increase font size */
+  color: #333; /* Adjust text color */
+  font-family: Arial, sans-serif; /* Adjust font family */
+  animation: fadeInOut 4s infinite; /* Animation for fading in and out */
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.8);
   }
-  
-  .loader {
-    border: 4px solid #f3f3f3; /* Light grey border */
-    border-top: 4px solid #3498db; /* Blue border on top */
-    border-radius: 50%; /* Circle shape */
-    width: 40px;
-    height: 40px;
-    animation: spin 2s linear infinite; /* Spin animation */
+  50% {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+}

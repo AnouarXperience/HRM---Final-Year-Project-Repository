@@ -2,7 +2,7 @@
 // LocationAwareComponent.jsx
 import React, { useEffect, useState } from 'react';
 import { View, Button, Alert, Text, StyleSheet } from 'react-native';
-import { requestLocationPermission } from './permissions';  // Adjust the import path as necessary to point to your permissions.js
+import { requestLocationPermission } from '../utils/permissions';  // Adjust the import path as necessary to point to your permissions.js
 
 const LocationAwareComponent = () => {
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
@@ -12,7 +12,7 @@ const LocationAwareComponent = () => {
       const granted = await requestLocationPermission();
       setHasLocationPermission(granted);
       if (!granted) {
-        Alert.alert("Permission Denied", "This app requires location access to function properly.");
+        Alert.alert('Permission Denied', 'This app requires location access to function properly.');
       }
     };
 
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     marginBottom: 20,
-  }
+  },
 });
 
 export default LocationAwareComponent;

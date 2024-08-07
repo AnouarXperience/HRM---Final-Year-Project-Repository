@@ -79,11 +79,21 @@ export class EmployeeService {
     return this.http.put(`${environment.baseurl}/users/${id}/status`, { status: status });
   }
 
+  getEmployeeCountByGender(): Observable<any> {
+    return this.http.get(`${environment.baseurl}/employee/count-by-gender`);
+  }
+
+  getEmployeeCountByContractType(): Observable<any> {
+    return this.http.get(`${environment.baseurl}/employee/count-by-contract-type`);
+  }
 
 
+  getEmployeeCountPerYear(): Observable<any> {
+    return this.http.get<any>(`${environment.baseurl}/employee/count-by-year`);
+  }
 
-
-
-
+  getEmployeeCountByStatus(): Observable<any> {
+    return this.http.get(`${environment.baseurl}/employee/count-by-status`);
+  }
 
   }
