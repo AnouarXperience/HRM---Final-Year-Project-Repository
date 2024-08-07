@@ -1,14 +1,19 @@
 package com.securityModel.controllers;
 
 
+import com.securityModel.models.Administrateur;
+import com.securityModel.models.Email;
+import com.securityModel.models.Employee;
 import com.securityModel.models.User;
 import com.securityModel.payload.request.ChangePasswordRequest;
 import com.securityModel.repository.UserRepository;
 import com.securityModel.service.UserService;
+import com.securityModel.utils.EmailService;
 import com.securityModel.utils.StorgeService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.File;
 import java.util.*;
 
 @RestController
@@ -35,6 +41,8 @@ public class UserController {
     JavaMailSender javaMailSender;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    EmailService emailService;
 
     @GetMapping("/all")
     public List<User> ListUser() {
@@ -113,49 +121,60 @@ public class UserController {
     }
 
     @PostMapping("/forgetpassword")
-    public  HashMap<String,String> forgetpassword(@RequestBody Map<String, String> body) throws MessagingException {
+    public HashMap<String, String> forgetpassword(@RequestBody Map<String, String> body) {
         String email = body.get("email");
-        HashMap message = new HashMap();
+        HashMap<String, String> message = new HashMap<>();
         User userexisting = userRepository.findByEmail(email);
-        if (userexisting == null){
-            message.put("user","user not found");
+        if (userexisting == null) {
+            message.put("user", "user not found");
             return message;
         }
-        UUID Token =UUID.randomUUID();
         String token = RandomCodeGenerator.generateRandomCode();
         userexisting.setPasswordResetToken(token);
         userexisting.setId(userexisting.getId());
-        String from ="no-reply@digid.com" ;
-        String to = userexisting.getEmail();
-        String resetLink = "http://localhost:4200/resetpassword?token=" + token;
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-        helper.setSubject("Password Reset Request");
-        helper.setFrom(from);
-        helper.setTo(to);
-        helper.setText("<html><head><style>"
-                + "a {"
-                + "  background-color: #73e2f0;"
-                + "  border: 1px solid black;"
-                + "  border-radius: 5px;"
-                + "  color: black;"
-                + "  text-align: center;"
-                + "  text-decoration: none;"
-                + "  display: inline-block;"
-                + "  padding: 10px 40px;"
-                + "  font-size: 20px;"
-                + "  cursor: pointer;" // Ajout du style pour le pointeur
-                + "}"
-                + "</style></head><body>"
-                + "<h2><font color='black'>You requested a password reset. Use the code below to set your new password:</font></h2>"
-                + "<a><b>" + token + "</b></a>"
-                + "</body></html>", true);
-        javaMailSender.send(mimeMessage);
+
+        String firstname = "";
+        String lastname = "";
+
+        if (userexisting instanceof Employee) {
+            firstname = ((Employee) userexisting).getFirstname();
+            lastname = ((Employee) userexisting).getLastname();
+        } else if (userexisting instanceof Administrateur) {
+            firstname = ((Administrateur) userexisting).getFirstname();
+            lastname = ((Administrateur) userexisting).getLastname();
+        }
+
+        String emailContent = "<div style='font-family:Arial,sans-serif;'>"
+                + "<img src='cid:logo' style='width:50px;height:auto;'><br><br>"
+                + "Hello " + firstname + " " + lastname + ",<br><br>"
+                + "We received a request to reset your DIGID password. "
+                + "Please enter the following password reset code:<br><br>"
+                + "<div style='background-color: #f5f6f7; border: 1px solid black; border-radius: 5px; "
+                + "color: black; text-align: center; text-decoration: none; display: inline-block; "
+                + "padding: 10px 40px; font-size: 20px; cursor: pointer;'>"
+                + "<b>" + token + "</b></div>"
+                + "</div><br><br>"
+                + "<div style='font-family:Arial,sans-serif;font-size:small;color:gray;'>"
+                + "Ce message est destiné uniquement à la personne adressée. Si vous avez reçu cet e-mail par erreur, "
+                + "veuillez en informer l'expéditeur et supprimer cet e-mail de votre système."
+                + "</div>";
+
+        Email emailMessage = new Email();
+        emailMessage.setSubject("Password Reset Request");
+        emailMessage.setContent(emailContent);
+        emailMessage.setTo(userexisting.getEmail());
+        emailMessage.setFrom("no-reply@digid.com");
+
+        emailService.sendHtmlMessageWithInlineImage(emailMessage, "upload/images/Picture1.png", "logo");
 
         userRepository.saveAndFlush(userexisting);
-        message.put("user","user found, check your eamil");
+        message.put("user", "user found, check your email");
         return message;
     }
+
+
+
+
     @PostMapping("/resetpassword")
     public ResponseEntity<Map<String, Object>> resetPassword(@RequestBody Map<String, String> body) {
         Map<String, Object> response = new HashMap<>();
@@ -187,7 +206,7 @@ public class UserController {
 
     @PostMapping("/changepassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
-        return userRepository.findByUsername(request.getUsername())
+        return userRepository.findById(request.getUserId())
                 .map(user -> {
                     if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -206,6 +225,11 @@ public class UserController {
     }
 
 
+    @GetMapping("/exists/username/{username}")
+    public ResponseEntity<Boolean> checkUsernameExists(@PathVariable String username) {
+        boolean exists = userRepository.existsByUsername(username);
+        return ResponseEntity.ok(exists);
+    }
 
 
 

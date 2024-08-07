@@ -10,6 +10,9 @@ import com.securityModel.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByUsername(String username);
+  // In UserRepository.java
+
+
 
   Boolean existsByUsername(String username);
 

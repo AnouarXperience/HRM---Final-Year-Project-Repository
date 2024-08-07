@@ -2,7 +2,6 @@ package com.securityModel.payload.request;
 
 public class UpdateAdministrateurRequest {
     private Long id;
-    private String username;
     private String email;
     private String firstname;
     private String lastname;
@@ -14,6 +13,10 @@ public class UpdateAdministrateurRequest {
     private double salary;
     private String id_card;
     private String phone;
+    private String gender;
+
+    private String contract_type;
+
 
     public Long getId() {
         return id;
@@ -23,13 +26,6 @@ public class UpdateAdministrateurRequest {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getEmail() {
         return email;
@@ -117,5 +113,21 @@ public class UpdateAdministrateurRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getContract_type() {
+        return contract_type;
+    }
+
+    public void setContract_type(String contract_type) {
+        this.contract_type = contract_type;
     }
 }

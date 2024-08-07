@@ -23,11 +23,15 @@ public class Administrateur extends User{
     private String id_card;
 
     private String phone;
+    private String gender;
+
+    private String contract_type;
+
 
     public Administrateur() {
     }
 
-    public Administrateur(String username, String email, String password, String image, String firstname, String lastname, String address, String department, String date_birth, String job, String hire_date, double salary, String id_card, String phone) {
+    public Administrateur(String username, String email, String password, String image, String firstname, String lastname, String address, String department, String date_birth, String job, String hire_date, double salary, String id_card, String phone, String gender, String contract_type) {
         super(username, email, password, image);
         this.firstname = firstname;
         this.lastname = lastname;
@@ -39,6 +43,8 @@ public class Administrateur extends User{
         this.salary = salary;
         this.id_card = id_card;
         this.phone = phone;
+        this.gender = gender;
+        this.contract_type = contract_type;
     }
 
     public String getFirstname() {
@@ -119,5 +125,21 @@ public class Administrateur extends User{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getContract_type() {
+        return contract_type;
+    }
+
+    public void setContract_type(String contract_type) {
+        this.contract_type = contract_type;
     }
 }

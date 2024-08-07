@@ -11,7 +11,9 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -92,4 +94,49 @@ public class EmployeeServiceIMPL implements EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
 
     }
+
+    public Map<String, Long> getEmployeeCountByGender() {
+        List<Object[]> results = employeeRepository.countEmployeesByGender();
+        Map<String, Long> employeeCountByGender = new HashMap<>();
+        for (Object[] result : results) {
+            String gender = (String) result[0];
+            Long count = (Long) result[1];
+            employeeCountByGender.put(gender, count);
+        }
+        return employeeCountByGender;
+    }
+
+    public Map<String, Long> getEmployeeCountByContractType() {
+        List<Object[]> results = employeeRepository.countEmployeesByContractType();
+        Map<String, Long> employeeCountByContractType = new HashMap<>();
+        for (Object[] result : results) {
+            String contractType = (String) result[0];
+            Long count = (Long) result[1];
+            employeeCountByContractType.put(contractType, count);
+        }
+        return employeeCountByContractType;
+    }
+
+    public Map<Integer, Long> getEmployeeCountByYear() {
+        List<Object[]> results = employeeRepository.countEmployeesByYear();
+        Map<Integer, Long> employeeCountByYear = new HashMap<>();
+        for (Object[] result : results) {
+            Integer year = Integer.parseInt((String) result[0]);
+            Long count = (Long) result[1];
+            employeeCountByYear.put(year, count);
+        }
+        return employeeCountByYear;
+    }
+    public Map<String, Long> getEmployeeCountByStatus() {
+        List<Object[]> results = employeeRepository.countEmployeesByStatus();
+        Map<String, Long> employeeCountByStatus = new HashMap<>();
+        for (Object[] result : results) {
+            Boolean status = (Boolean) result[0];
+            Long count = (Long) result[1];
+            employeeCountByStatus.put(status ? "Active" : "Deactivated", count);
+        }
+        return employeeCountByStatus;
+    }
+
+
 }

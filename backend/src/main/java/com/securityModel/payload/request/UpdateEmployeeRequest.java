@@ -42,6 +42,7 @@ public class UpdateEmployeeRequest {
     private String image;
 
     private String phone;
+    private String contract_type;
 
 
     public Long getId() {
@@ -170,5 +171,13 @@ public class UpdateEmployeeRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getContract_type() {
+        return contract_type;
+    }
+
+    public void setContract_type(String contract_type) {
+        this.contract_type = contract_type;
     }
 }
